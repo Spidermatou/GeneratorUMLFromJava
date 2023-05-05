@@ -39,7 +39,7 @@ package jdk.javadoc.doclet
         +{abstract} getKind():Doclet.Option.Kind
         +{abstract} getParameters():String
         +{abstract} process(option:String,arguments:String[*]):boolean
-    }
+    } 
 
 
     'La classe du doclet standard qui génère la documentation en HTML

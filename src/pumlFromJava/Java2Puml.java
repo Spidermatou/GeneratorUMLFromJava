@@ -14,6 +14,12 @@ public class Java2Puml
     javadoc -private -sourcepath <src> -doclet pumlFromJava.FirstDoclet -docletpath out/production/<projet>
       <package> ... <fichiers>
  */
+
+/*
+    Commande corrigé:
+    javadoc -private -d test -sourcepath src -doclet pumlFromJava.FirstDoclet -docletpath out/production/ProjetP21 pumlFromJava
+
+ */
         toolProvider.run(System.out, System.err, args);
     }
 }

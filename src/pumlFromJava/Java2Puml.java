@@ -20,6 +20,12 @@ public class Java2Puml
     javadoc -private -d test -sourcepath src -doclet pumlFromJava.FirstDoclet -docletpath out/production/ProjetP21 pumlFromJava
 
  */
+
+/*
+    commande pour western:
+    javadoc -private -sourcepath /home/mat/P21Projet -doclet pumlFromJava.FirstDoclet -docletpath /home/mat/P21Projet/out/production/P21Projet western
+
+ */
         toolProvider.run(System.out, System.err, args);
     }
 }

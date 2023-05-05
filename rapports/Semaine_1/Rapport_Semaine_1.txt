@@ -1,0 +1,27 @@
+---------P21 Projet Semaine 1---------
+Je créer un fork du projet P21.
+
+Javadoc est un outil fourni avec le JDK pour permettre la génération d'une documentation en fichier HTML à partir du code source.
+La commande a recours au Doclet.
+
+Dans notre cas on va la réutiliser pour générer du PUML.
+Doclet est une interface.
+
+Les options de la commande :
+
+
+Le -private permet d'avoir toutes les visibilités dans le code (private,public,etc)
+Le -doclet est une option pour générer en comment sera générer le java (de base sans l'option c'est en .HTML) mais on peut le faire en autre extensions de fichier.
+Le -d permet d'indiquer un dossier de destination ou la commande JavaDoc va enregistrer les fichier générer. (exemple : javadoc -d /home/matteo.renaud/Documents/Université/1ère_Année/SAE/SAE_P21/P21_Projet/p-21-projet-renaud-matteo-gillig-matteo-tp-4/src/DESTINATION/western -private western)
+Le -sourcepath est le chemin vers les fichiers source. (ici c'est le chemin vers le package western (qui doit etre dans le meme dossier))
+Le -docletpath est le chemin vers les fichier class doclet.
+
+Voici la commande qui marche: (il faut que je sois dans ce dossier sur ma machine : /Documents/Université/1ère_Année/SAE/SAE_P21/P21_Projet/p-21-projet-renaud-matteo-gillig-matteo-tp-4)
+ //javadoc -private -sourcepath src -doclet pumlFromJava.FirstDoclet -docletpath out/production/p-21-projet-renaud-matteo-gillig-matteo-tp-4 western
+//ou avec un chemin absolu pour ne pas etre obliger d'etre dans le dossier
+//javadoc -private -sourcepath /home/matteo.renaud/Documents/Université/1ère_Année/SAE/SAE_P21/P21_Projet/p-21-projet-renaud-matteo-gillig-matteo-tp-4/src -doclet pumlFromJava.FirstDoclet -docletpath /home/matteo.renaud/Documents/Université/1ère_Année/SAE/SAE_P21/P21_Projet/p-21-projet-renaud-matteo-gillig-matteo-tp-4/out/production/p-21-projet-renaud-matteo-gillig-matteo-tp-4 western
+
+
+    
+
+

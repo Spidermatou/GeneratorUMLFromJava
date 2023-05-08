@@ -8,7 +8,6 @@ hide empty members
 
 'Je ne met pas la classe Objet car toutes les classe hérite de Object
 
-
 'Le package
 'The Doclet API provides an environment which, in conjunction with the Language Model API and Compiler Tree API, allows clients to inspect the source-level structures of programs and libraries, including API comments embedded in the source.
 'The standard doclet can be used to generate HTML-formatted documentation. It supports user-defined taglets, which can be used to generate customized output for user-defined tags in documentation comments.
@@ -29,7 +28,6 @@ package jdk-javadoc.doclet
         +{abstract} run(environment:DocletEnvironment):boolean
     }
 
-
     'Une encapsulation d'option de nom, d'alias, parametres et descriptions utilisé par le Doclet.
     'https://docs.oracle.com/en/java/javase/18/docs/api/jdk.javadoc/jdk/javadoc/doclet/Doclet.Option.html
     interface Doclet.Option <<interface>>
@@ -40,7 +38,6 @@ package jdk-javadoc.doclet
         +{abstract} getParameters():String
         +{abstract} process(option:String,arguments:String[*]):boolean
     }
-
 
     'La classe du doclet standard qui génère la documentation en HTML
     'https://docs.oracle.com/en/java/javase/18/docs/api/jdk.javadoc/jdk/javadoc/doclet/StandardDoclet.html
@@ -58,8 +55,6 @@ package jdk-javadoc.doclet
         +getReporter():Reporter
     }
 
-
-
     'L'interface pour rapporter des diagnostic ou d'autres messages
     'https://docs.oracle.com/en/java/javase/18/docs/api/jdk.javadoc/jdk/javadoc/doclet/Reporter.html
     interface Reporter <<interface>>
@@ -69,7 +64,8 @@ package jdk-javadoc.doclet
         'Il y a truc qui s'appelle default
         'Les méthodes default dans les interface : https://docs.oracle.com/javase/tutorial/java/IandI/defaultmethods.html
         'Selon ce que j'ai compris, le mot clé default dans les interfaces permettent aux méthode qui normalement sont abstraite d'avoir une implémentation par défaut
-        'du coup jsp si on doit enlever les abstract dans le DCC
+        'Les default permettent qu'une classe qui implémente cette interface ne soit pas obliger de la redéfinir avec un @Override mais peut directement utiliser la méthode défault
+        'Du coup jsp si on doit enlever les abstract dans le DCC
         +{abstract}default print(kind:Diagnostic.Kind,path:DocTreePath,start:Integer,pos:Integer,end:Integer,message:String)
         +{abstract}print(kind:Diagnostic.Kind,element:Element,message:String)
         +{abstract}default print(kind:Diagnostic.Kind,file:FileObject,start:Integer,pos:Integer,end:Integer,message:String)
@@ -90,7 +86,6 @@ package jdk-javadoc.doclet
         +{static} valuesOf(name:String):Doclet.Option.Kind
     }
 
-
     'Represents the operating environment of a single invocation of the doclet. This object can be used to access the program structures, various utilities and the user specified elements on the command line.
     'https://docs.oracle.com/en/java/javase/19/docs/api//jdk.javadoc/jdk/javadoc/doclet/DocletEnvironment.html
     interface DocletEnvironnment
@@ -105,6 +100,43 @@ package jdk-javadoc.doclet
         +{abstract} getSourceVersion():SourceVersion
         +{abstract} getFileKind(type:TypeElement):JavaFileObject.Kind
     }
+
+    'Le mode spécifiant le niveau de détails du module de documentatino.
+    'https://docs.oracle.com/en/java/javase/19/docs/api//jdk.javadoc/jdk/javadoc/doclet/DocletEnvironment.ModuleMode.html
+    enum DocletEnvironnment.Module
+    {
+        ALL
+        API
+        +{static}values():DocletEnvironment.ModuleMode[]
+        +{static}valueOf(name:String):DocletEnvironment.ModuleMode
+    }
+
+    'L'interface pour un taglet customiser supporter par le doclet comme le StandardDoclet. Les taglets customiser sont utiliser pour pour gérer les tags customiser dans les commentaires de documentation.
+    'Les tags customiser peuvent etre instancier individuellement en temps que block qui apparaiteront à la fin d'un commentaire ou en temps que tag interne  qui peuvent apparaitre dans la corps  d'un commentaire de documentation.
+    'https://docs.oracle.com/en/java/javase/19/docs/api//jdk.javadoc/jdk/javadoc/doclet/Taglet.html
+    interface Taglet
+    {
+        +{abstract} getAllowedLocations():Set<Taglet.Location>
+        +{abstract} default isBlockTag(): boolean
+        +{abstract} getName()String:String
+        +{abstract} default init(env:DocletEnvironment, doclet:Doclet)
+        +{abstract} toString(tags:List<? extends DocTree>,element:Element):String
+    }
+
+    'Le type d'une location dans laquel un tag peut être utilisé
+    'https://docs.oracle.com/en/java/javase/19/docs/api//jdk.javadoc/jdk/javadoc/doclet/Taglet.Location.html
+    enum Taglet.Location <<énumération>>
+    {
+        CONSTRUCTOR
+        FIELD
+        METHOD
+        MODULE
+        OVERVIEW
+        PACKAGE
+        TYPE
+        + {static} values():Taglet.Location[]
+        + {static} valueOf(name:String):Taglet.Location
+    }
 }
 
 'Une interface pour les outils de la ligne de commande pour fournir un moyen d'être invoquer sans démarrer une nouvelle VM
@@ -117,11 +149,11 @@ interface ToolProvider <<interface>>
     +{abstract} {static} findFirst(name:String):Optional<ToolProvider>
 }
 
-
 Doclet -- Doclet.Option:<<use>>
-Doclet.Option -- Doclet.Option.Kind:<<use>>
+Doclet.Option -- "Doclet.Option.Kind":<<use>>
 StandardDoclet -- Reporter:<<use>>
 StandardDoclet -- Doclet.Option:<<use>>
-
+Taglet -- Taglet.Location:<<use>>
+DocletEnvironnment -- DocletEnvironment.ModuleMode:<<use>>
 
 @enduml

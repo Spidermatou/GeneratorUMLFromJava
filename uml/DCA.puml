@@ -1,9 +1,40 @@
 @startuml
+'https://plantuml.com/class-diagram
 
 skinparam classAttributeIconSize 0
 skinparam classFontStyle Bold
 skinparam style strictuml
 hide empty members
 
+package jdk-javadoc.doclet
+{
+   'The user doclet must implement this interface, as described in the package description.
+   interface Doclet <<interface>>
+   'An encapsulation of option name, aliases, parameters and descriptions as used by the Doclet.
+   interface Doclet.Option <<interface>>
+   'The kind of an option.
+   enum Doclet.Option.Kind <<enumération>>
+   'This doclet generates HTML-formatted documentation for the specified modules, packages and types.
+   class StandardDoclet implements Doclet
+   'Interface for reporting diagnostics and other messages.
+   interface Reporter <<interface>>
+   'Represents the operating environment of a single invocation of the doclet.
+   interface DocletEnvironnment <<interface>>
+   'The mode specifying the level of detail of module documentation.
+   enum DocletEnvironment_ModuleMode <<enumération>>
+   'The interface for a custom taglet supported by doclets such as the standard doclet.
+   interface Taglet <<interface>>
+   'The kind of location in which a tag may be used.
+   enum Taglet.Location <<enumération>>
+}
+
+interface ToolProvider <<interface>>
+
+Doclet -- Doclet.Option:<<use>>
+Doclet.Option -- "Doclet.Option.Kind":<<use>>
+StandardDoclet -- Reporter:<<use>>
+StandardDoclet -- Doclet.Option:<<use>>
+Taglet -- Taglet.Location:<<use>>
+DocletEnvironnment -- DocletEnvironment_ModuleMode:<<use>>
 
 @enduml

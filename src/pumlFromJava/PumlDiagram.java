@@ -90,38 +90,17 @@ public class PumlDiagram implements Doclet
     {
         ToolProvider toolProvider = ToolProvider.findFirst("javadoc").get();
         System.out.println(toolProvider.name());
-<<<<<<< HEAD
-=======
 
 
-        //Jsp, je teste
-        PumlDiagram pumlDiagram=new PumlDiagram();
 
-        Set<? extends Option> options=pumlDiagram.getSupportedOptions();
-        for(Option o:options)
-        {
-            List<String>liste=new ArrayList<String>();
-            liste=o.getNames();
 
-            if(liste.get(0) =="-d")
-            {
-                tiretD=liste.get(0);
-                chemin=o.getParameters();
-            }
-
-            if(liste.get(0)=="-out")
-            {
-                out=liste.get(0);
-                extension=o.getParameters();
-            }
-        }
 
         //La tableau d'arguement
         argument=new String[] {"-private","-sourcepath", "src", "-doclet",
                 "pumlFromJava.PumlDiagram", "-docletpath", "out/production/p-21-projet-renaud-matteo-gillig-matteo-tp-4", "western"
-                ,tiretD,chemin,out ,extension};
+                 };
 
->>>>>>> d92df8c51ee0251b5c955a5234503359d0b882cc
+
         toolProvider.run(System.out, System.err, argument);
     }
 

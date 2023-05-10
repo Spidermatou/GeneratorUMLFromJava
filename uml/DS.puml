@@ -5,7 +5,7 @@ skinparam style strictuml
 hide footbox
 
 
-Java2Puml -> javadoc: javadoc -private -sourcepath \n<src> -doclet pumlFromJava.FirstDoclet \n-docletpath out/production/<projet> \n<package> ... <fichiers>
+main -> javadoc: javadoc -private -sourcepath \n<src> -doclet pumlFromJava.FirstDoclet \n-docletpath out/production/<projet> \n<package> ... <fichiers>
 javadoc -> Doclet: init(Locale, Reporter)
 javadoc -> Doclet ++: getName()
 return getClass().getSimpleName

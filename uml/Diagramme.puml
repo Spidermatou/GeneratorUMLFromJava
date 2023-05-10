@@ -1,0 +1,47 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam classFontStyle Bold
+skinparam style strictuml
+hide empty members
+
+package western
+{
+'jsp si c'est comme ca qu'on fait mais ca fait un fichier stylé
+ENUM western.Genre
+{
+}
+CLASS western.Histoire4
+{
+}
+CLASS western.Personnage
+{
+}
+CLASS western.Boisson
+{
+}
+CLASS western.Brigand
+{
+}
+CLASS western.Narrateur
+{
+}
+INTERFACE western.HorsLaLoi
+{
+}
+CLASS western.Dame
+{
+}
+CLASS western.Substantif
+{
+}
+CLASS western.Ripou
+{
+}
+INTERFACE western.Nommable
+{
+}
+CLASS western.Cowboy
+{
+}
+}
+@enduml

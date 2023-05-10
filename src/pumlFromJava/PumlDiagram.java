@@ -80,6 +80,12 @@ public class PumlDiagram implements Doclet
 
         creation(element);
     }
+    @Override
+    public Set<? extends Option> getSupportedOptions() {
+        // This doclet does not support any options.
+        return Collections.emptySet();
+    }
+
 
     /*
     Reporters
@@ -93,149 +99,19 @@ public class PumlDiagram implements Doclet
     {
         ToolProvider toolProvider = ToolProvider.findFirst("javadoc").get();
         System.out.println(toolProvider.name());
-
-
-        //Jsp, je teste
-        PumlDiagram pumlDiagram=new PumlDiagram();
-
-        Set<? extends Option> options=pumlDiagram.getSupportedOptions();
-        for(Option o:options)
-        {
-            List<String>liste=new ArrayList<String>();
-            liste=o.getNames();
-            if(liste.get(0) =="-d")
-            {
-                tiretD=liste.get(0);
-                chemin=o.getParameters();
-            }
-            if(liste.get(0)=="-out")
-            {
-                out=liste.get(0);
-                extension=o.getParameters();
-            }
-        }
-
-        //La tableau d'arguement
-        argument=new String[] {"-private","-sourcepath", "src", "-doclet",
-                "pumlFromJava.PumlDiagram", "-docletpath", "out/production/p-21-projet-renaud-matteo-gillig-matteo-tp-4", "western"
-                ,tiretD,chemin,out ,extension};
-
         toolProvider.run(System.out, System.err, argument);
     }
-    //--------------------------
-    //Ce sont des essais
-    public static String[]argument;
-    static String out="";
-    static String tiretD="";
-    static String chemin="";
-    static String extension="";
-    public String getOutParametre()
-    {
-        return this.extension;
-    }
-    public String getTiretDParametre()
-    {
-        return this.chemin;
-    }
 
-    //---Pour les options----
-    @Override
-    public Set<? extends Option> getSupportedOptions()
-    {
-
-        Set <Doclet.Option>options=new HashSet<Doclet.Option>();
-
-        //L'option -d
-        Doclet.Option directory=new Option()
-        {
-            private String nomOption = "-d";
-            private String description = "Le chemin vers le fichier.";
-            private String parametre="./Diagramme";
-
-            @Override
-            public int getArgumentCount() {
-                return 1;
-            }
-
-            @Override
-            public String getDescription() {
-                return this.description;
-            }
-
-            @Override
-            public Kind getKind() {
-                return Kind.STANDARD;
-            }
-
-            @Override
-            public List<String> getNames() {
-                ArrayList<String> liste = new ArrayList<>();
-            liste.add(nomOption);
-
-                return liste;
-            }
-
-            @Override
-            public String getParameters() {
-                return this.parametre;
-            }
-
-            @Override
-            public boolean process(String s, List<String> list) {
-                return true;
-            }
-        };
-        //L'option -out
-        Doclet.Option out=new Option() {
-            private String nomOption = "-out";
-            private String description = "L'extension du fichier.";
-            private String parametree=".puml";
-            @Override
-            public int getArgumentCount() {
-                return 1;
-            }
-
-            @Override
-            public String getDescription() {
-                return this.description;
-            }
-
-            @Override
-            public Kind getKind() {
-                return Kind.STANDARD;
-            }
-
-            @Override
-            public List<String> getNames() {
-                ArrayList<String> liste = new ArrayList<>();
-                liste.add("-out");
-
-                return liste;
-            }
-
-            @Override
-            public String getParameters() {
-                return this.parametree;
-            }
-
-            @Override
-            public boolean process(String s, List<String> list) {
-                return true;
-            }
-        };
-        options.add(directory);
-        options.add(out);
-
-        // This doclet does not support any options.
-        return options;
-    }
+    //La tableau d'arguement
+    public static String []argument=new String[] {"-private","-sourcepath", "src", "-doclet",
+        "pumlFromJava.PumlDiagram", "-docletpath", "out/production/p-21-projet-renaud-matteo-gillig-matteo-tp-4",
+            "western"};
+    //jsp pk mais l'option -d donne l'erreur : javadoc: error - invalid flag: -d
+    //Donc je choisis moi meme le chemin dans la methode de creation
 
     public void creation(Element element)
     {
-        String cheminVers=getTiretDParametre();
-        System.out.println(cheminVers);
-        cheminVers+=getOutParametre();
-        System.out.println(cheminVers);
+        String cheminVers="DiagrmmeGenere.puml";
 
         //Créer ficher
         try

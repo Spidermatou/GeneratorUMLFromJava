@@ -1,0 +1,123 @@
+@startuml
+'https://plantuml.com/class-diagram
+skinparam classAttributeIconSize 0
+skinparam classFontStyle Bold
+skinparam style strictuml
+hide empty members
+
+package javax.lang.model
+{
+    interface element.AnnotationMirror <<interface>>
+    {
+        +{abstract}getAnnotationType() : DeclaredType
+        +{abstract}getElementValues() : Map<? extends ExecutableElement, ? extends AnnotationValue>
+    }
+
+    interface element.AnnotationValue <<interface>>
+    {
+        +{abstract}accept(v:AnnotationValueVisitor<R,P>, p:P) : <R, P> R
+        +{abstract}getValue() : Object
+        +{abstract}toString() : String
+    }
+
+    interface element.AnnotationValueVisitor<R,P> <<interface>>
+    {
+        + visit(av:AnnotationValue) : default R
+        +{abstract}visit(av:AnnotationValue, p:P) : R
+        +{abstract}visitAnnotation(a:AnnotationMirror, p:P) : R
+        +{abstract}visitArray(vals:List<? extends AnnotationValue>, p:P) : R
+        +{abstract}visitBoolean(b:boolean, p:P) : R
+        +{abstract}visitByte(b:byte, p:P) : R
+        +{abstract}visitChar(c:char, p:P) : R
+        +{abstract}visitDouble(d:double, p:P) : R
+        +{abstract}visitEnumConstant(c:VariableElement, p:P) : R
+        +{abstract}visitFloat(f:float, p:P) : R
+        +{abstract}visitInt(i:Integer, p:P) : R
+        +{abstract}visitLong(i:long, p:P) : R
+        +{abstract}visitShort(s:short, p:P) : R
+        +{abstract}visitString(s:String, p:P) : R
+        +{abstract}visitType(t:TypeMirror, p:P) : R
+        +{abstract}visitUnknown(av:AnnotationValue, p:P) : R
+    }
+    interface element.Element <<interface>>
+    {
+        +{abstract}accept(v:ElementVisitor<R,P>, p:P) : <R, P>
+        +{abstract}asType() : TypeMirror
+        +{abstract}equals(obj:Object) : boolean
+        +{abstract}getAnnotation(annotationType:Class<A>) : <A extends Annotation> A
+        +{abstract}getAnnotationMirrors() : List<? extends AnnotationMirror>
+        +{abstract}getAnnotationByType(annotationType:Class<A>) : <A extends Annotation> A[]
+        +{abstract}getEnclosedElements() : List<? extends Element>
+        +{abstract}getEnclosingElement() : Element
+        +{abstract}getKind() : ElementKind
+        +{abstract}getModifiers() : Set<Modifier>
+        +{abstract}getSimpleName() : Name
+        +{abstract}hashCode() : Integer
+    }
+
+    enum element.ElementKind <<enumération>>
+    {
+        ANNOTATION_TYPE
+        BINDING_VARIABLE
+        CLASS
+        CONSTRUCTOR
+        ENUM
+        ENUM_CONSTANT
+        EXCEPTION_PARAMETER
+        FIELD
+        INSTANCE_INIT
+        INTERFACE
+        LOCAL_VARIABLE
+        METHOD
+        MODULE
+        OTHER
+        PACKAGE
+        PARAMETER
+        RECORD
+        RECORD_COMPONENT
+        RESOURCE_VARIABLE
+        STATIC_INIT
+        TYPE_PARAMETER
+        +isclass() : boolean
+        +isDeclaredType() : boolean
+        +isExecutable() : boolean
+        +isField() : boolean
+        +isInitializer() : boolean
+        +isInterface() : boolean
+        +isVariable() : boolean
+        +{static}valueOf(name:String) : ElementKind
+        +{static}values() : ElementKind[]
+    }
+
+    interface element.ElementVisitor<R,P> <<interface>>
+    {
+        + visit(e:Element) : default R
+        +{abstract}visit(e:Element, p:P) : R
+        +{abstract}visitExecutable(e:ExecutableElement, p:P) : R
+        + visitModule(e:ModuleElement, p:P) : default R
+        +{abstract}visitPackage(e:PackageElement, p:P) : R
+        + visitRecordComponent(e:RecordComponentElement, p:P) : default R
+        +{abstract}visitType(e:TypeElement, p:P) : R
+        +{abstract}visitTypeParameter(e:TypeParameterElement, p:P) : R
+        +{abstract}visitUnknown(e:Element, p:P) : R
+        +{abstract}visitVariable(e:VariableElement, p:P) : R
+    }
+
+    interface element.ExecutableElement <<interface>>
+    {
+        +{abstract}asType() : TypeMirror
+        +{abstract}getDefaultValue() : AnnotationValue
+        +{abstract}getEnclosingElement() : Element
+        +{abstract}getParameters() : List<? extends VariableElement>
+        +{abstract}getReceiverType() : TypeMirror
+        +{abstract}getReturnType() : TypeMirror
+        +{abstract}getSimpleName() : Name
+        +{abstract}getThrownTypes() : List<? extends TypeMirror>
+        +{abstract}getTypeParameters() : List<? extends TypeParameterElement>
+        +{abstract}isDefault() : boolean
+        +{abstract}isVarArgs() : boolean
+    }
+
+}
+
+@enduml

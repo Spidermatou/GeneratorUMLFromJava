@@ -15,6 +15,7 @@ import java.util.spi.ToolProvider;
 //La classe implémente bien le Doclet pour avoir les méthodes et le fonctionnement
 public class PumlDiagram implements Doclet
 {
+
     //Je mets un reporter et un locale
     private Reporter reporter;
     private Locale locale;
@@ -31,35 +32,25 @@ public class PumlDiagram implements Doclet
         //Je met le Reporter et le Locale
         this.reporter=reporter;
         this.locale=locale;
+
     }
 
     @Override
     public String getName() {
-        // For this doclet, the name of the doclet is just the
-        // simple name of the class. The name may be used in
-        // messages related to this doclet, such as in command-line
-        // help when doclet-specific options are provided.
         return getClass().getSimpleName();
     }
 
 
     @Override
     public SourceVersion getSupportedSourceVersion() {
-        // This doclet supports all source versions.
-        // More sophisticated doclets may use a more
-        // specific version, to ensure that they do not
-        // encounter more recent language features that
-        // they may not be able to handle.
         return SourceVersion.latest();
     }
     @Override
     public boolean run(DocletEnvironment environment) {
-        // This method is called to perform the work of the doclet.
-        // In this case, it just prints out the names of the
-        // elements specified on the command line.
         System.out.println(this.getName());
         System.out.println(environment.getSpecifiedElements());
         System.out.println(environment.getIncludedElements());
+
         for (Element element : environment.getSpecifiedElements())
         {
             dumpElement(element);
@@ -99,6 +90,38 @@ public class PumlDiagram implements Doclet
     {
         ToolProvider toolProvider = ToolProvider.findFirst("javadoc").get();
         System.out.println(toolProvider.name());
+<<<<<<< HEAD
+=======
+
+
+        //Jsp, je teste
+        PumlDiagram pumlDiagram=new PumlDiagram();
+
+        Set<? extends Option> options=pumlDiagram.getSupportedOptions();
+        for(Option o:options)
+        {
+            List<String>liste=new ArrayList<String>();
+            liste=o.getNames();
+
+            if(liste.get(0) =="-d")
+            {
+                tiretD=liste.get(0);
+                chemin=o.getParameters();
+            }
+
+            if(liste.get(0)=="-out")
+            {
+                out=liste.get(0);
+                extension=o.getParameters();
+            }
+        }
+
+        //La tableau d'arguement
+        argument=new String[] {"-private","-sourcepath", "src", "-doclet",
+                "pumlFromJava.PumlDiagram", "-docletpath", "out/production/p-21-projet-renaud-matteo-gillig-matteo-tp-4", "western"
+                ,tiretD,chemin,out ,extension};
+
+>>>>>>> d92df8c51ee0251b5c955a5234503359d0b882cc
         toolProvider.run(System.out, System.err, argument);
     }
 
@@ -145,6 +168,7 @@ public class PumlDiagram implements Doclet
             //Nom du package
             myWriter.write("package "+element.getSimpleName().toString()+"\n{\n");
             myWriter.write("'jsp si c'est comme ca qu'on fait mais ca fait un fichier stylé\n");
+
             //Chaque élément
             for(Element e:element.getEnclosedElements())
             {

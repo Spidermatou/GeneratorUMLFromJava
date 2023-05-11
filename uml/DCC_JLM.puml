@@ -118,6 +118,223 @@ package javax.lang.model
         +{abstract}isVarArgs() : boolean
     }
 
+    enum element.Modifier <<enumération>>
+    {
+        ABSTRACT
+        DEFAULT
+        FINAL
+        NATIVE
+        NON_SEALED
+        PRIVATE
+        PROTECTED
+        PUBLIC
+        SEALED
+        STATIC
+        STRICTFP
+        SYNCHRONIZED
+        TRANSIENT
+        VOLATILE
+        + toString() : String
+        +{static}valueOf(name:String) : Modifier
+        +{static}values() : Modifier[]
+    }
+
+    interface element.ModuleElement <<interface>>
+    {
+        +{static}interface ModuleElement.Directive
+        +{static}enum ModuleElement.DirectiveKind
+        +{static}interface ModuleElement.DirectiveVistitor<R,P>
+        +{static}interface ModuleElement.ExportsDirective
+        +{static}interface ModuleElement.OpensDirective
+        +{static}interface ModuleElement.ProvidesDirective
+        +{static}interface ModuleElement.RequiresDirective
+        +{static}interface ModuleElement.UsesDirective
+        +{abstract}asType() : TypeMirror
+        +{abstract}getDirectives() : List<? extends ModuleElement.Directive>
+        +{abstract}getEnclosedElements() : List<? extends Element>
+        +{abstract}getEnclosingElement() : Element
+        +{abstract}getQualifiedName() : Name
+        +{abstract}getSimpleName() : Name
+        +{abstract}isOpen() : boolean
+        +{abstract}isUnnamed() : boolean
+    }
+
+    interface element.Name <<interface>>
+    {
+        +{abstract}contentEquals(cs : CharSequence) : boolean
+        +{abstract}equals(obj:Object) : boolean
+        +{abstract}hashCode() : Integer
+    }
+
+    enum element.NestingKind <<enumération>>
+    {
+        ANONYMOUS
+        LOCAL
+        MEMBER
+        TOP_LEVEL
+        + isNested() : boolean
+        +{static}valueOf(name:String) : NestingKind
+        +{static}values() : NestingKind[]
+    }
+
+    interface element.PackageElement <<interface>>
+    {
+        +{abstract}asType() : TypeMirror
+        +{abstract}getEnclosedElements() : List<? extends Element>
+        +{abstract}getEnclosingElement() : Element
+        +{abstract}getQualifiedName() : Name
+        +{abstract}getSimpleName() : Name
+        +{abstract}isUnnamed() : boolean
+    }
+
+    interface element.Parameterizable <<interface>>
+    {
+        +{abstract}getTypeParameters() : List<? extends TypeParameterElement>
+    }
+
+    interface element.QualifiedNameable <<interface>>
+    {
+        +{abstract}getQualifiedName() : Name
+    }
+
+    interface element.RecordComponentElement <<interface>>
+    {
+        +{abstract}getAccessor() : ExecutableElement
+        +{abstract}getEnclosingElement() : Element
+        +{abstract}getSimpleName() : Name
+    }
+
+    interface element.TypeElement <<interface>>
+    {
+        +{abstract}asType() : TypeMirror
+        +{abstract}getEnclosedElements() : List<? extends Element>
+        +{abstract}getEnclosingElement() : Element
+        +{abstract}getInterfaces() : List<? extends TypeMirror>
+        +{abstract}getNestingKind() : NestingKind
+        + getPermittedSubClasses() : default List<? extends TypeMirror>
+        +{abstract}getQualifiedName() : Name
+        + getRecordComponents() : default List<? extends RecordComponentElement>
+        +{abstract}getSimpleName() : Name
+        +{abstract}getSuperClass() : TypeMirror
+        +{abstract}getTypeParameters() : List<? extends TypeParameterElement>
+    }
+
+    interface element.TypeParameterElement <<interface>>
+    {
+        +{abstract}asType() : TypeMirror
+        +{abstract}getBounds() : List<? extends TypeMirror>
+        +{abstract}getEnclosingElement() : Element
+        +{abstract}getGenericElement() : Element
+    }
+
+    class element.UnknownAnnotationValueException
+    {
+        +<<create>>UnknownAnnotationValueException(av:AnnotationValue,p:Object)
+        + getArgument() : Object
+        + getUnknownAnnotationValue() : AnnotationValue
+    }
+
+    class element.UnknownDirectiveException
+    {
+        +<<create>>UnknownDirectiveException(d:ModuleElement.Directive,p:Object)
+        + getArgument() : Object
+        + getUnknownDirective() : ModuleElement.Directive
+    }
+
+    class element.UnknownElementException
+    {
+        +<<create>>UnknownElementException(e:Element,p:Object)
+        + getArgument() : Object
+        + getUnknownElement() : Element
+    }
+
+    interface element.VariableElement <<interface>>
+    {
+        +{abstract}asType() : TypeMirror
+        +{abstract}getConstantValue() : Object
+        +{abstract}getEnclosingElement() : Element
+        +{abstract}getSimpleName() : Name
+    }
+
+    interface type.ArrayType <<interface>>
+    {
+        +{abstract}getComponentType() : TypeMirror
+    }
+
+    interface type.DeclaredType <<interface>>
+    {
+        +{abstract}asElement() : Element
+        +{abstract}getEnclosingElement() : TypeMirror
+        +{abstract}getTypeArguments() : List<? extends TypeMirror>
+    }
+
+    interface type.ErrorType <<interface>>
+
+    interface type.ExecutableType <<interface>>
+    {
+        +{abstract}getParametersType() : List<? extends TypeMirror>
+        +{abstract}getReceiverType() : TypeMirror
+        +{abstract}getReturnType() : TypeMirror
+        +{abstract}getThrownTypes() : List<? extends TypeMirror>
+        +{abstract}getTypeVariables() : List<? extends TypeVariable>
+    }
+
+    interface type.IntersectionType <<interface>>
+    {
+        +{abstract}getBounds() : List<? extends TypeMirror>
+    }
+
+    class type.MirroredTypeException
+    {
+        +<<create>>MirroredTypeException(type:TypeMirror)
+        + getTypeMirror() : TypeMirror
+    }
+
+    class type.MirroredTypesException
+    {
+        +<<create>>MirroredTypesException(types:List<? extends TypeMirror>)
+        + getTypeMirror() : List<? extends TypeMirror>
+    }
+
+    interface type.NoType <<interface>>
+
+    interface type.NullType <<interface>>
+
+    interface type.PrimitiveType <<interface>>
+
+    interface type.ReferenceType <<interface>>
+
+    enum type.TypeKind <<enumération>>
+    {
+        ARRAY
+        BOOLEAN
+        BYTE
+        CHAR
+        DECLARED
+        DOUBLE
+        ERROR
+        EXECUTABLE
+        FLOAT
+        INT
+        INTERSECTION
+        LONG
+        MODULE
+        NONE
+        NULL
+        OTHER
+        PACKAGE
+        SHORT
+        TYPEVAR
+        UNION
+        VOID
+        WILDCARD
+
+        + isPrimitive() : boolean
+        +{static}valueOf(name:String) : TypeKind
+        +{static}values() : TypeKind[]
+    }
+
+
 }
 
 @enduml

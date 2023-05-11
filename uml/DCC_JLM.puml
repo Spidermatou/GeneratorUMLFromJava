@@ -334,6 +334,61 @@ package javax.lang.model
         +{static}values() : TypeKind[]
     }
 
+    interface type.TypeMirror <<interface>>
+    {
+        +{abstract}accept(v:TypeVisitor<R,P>,p:P) : <R,P> R
+        +{abstract}equals(obj:Object) : boolean
+        +{abstract}getAnnotation(annotationType:Class<A>) : <A extends Annotation> A
+        +{abstract}getAnnotationMirrors() : List<? extends AnnotationMirror>
+        +{abstract}getAnnotationByType(annotationType:Class<A>) : <A extends Annotation> A[]
+        +{abstract}getKind() : TypeKind
+        +{abstract}hashCode() : Integer
+        +{abstract}toString() : String
+    }
+
+    interface type.TypeVariable <<interface>>
+    {
+        +{abstract}asElement() : Element
+        +{abstract}getLowerBound() : TypeMirror
+        +{abstract}getUpperBound() : TypeMirror
+    }
+
+    interface type.TypeVisitor<R,P> <<interface>>
+    {
+        + visit(type:TypeMirror) : default R
+        +{abstract}visitUnknown(type:TypeMirror, p:P) : R
+        +{abstract}visitArray(t:ArrayType, p:P) : R
+        +{abstract}visitDeclared(t:DeclaredType, p:P) : R
+        +{abstract}visitError(t:ErrorType, p:P) : R
+        +{abstract}visitExecutable(t:ExecutableType, p:P) : R
+        +{abstract}visitIntersection(t:IntersectionType, p:P) : R
+        +{abstract}visitNoType(t:NoType, p:P) : R
+        +{abstract}visitNull(t:NullType, p:P) : R
+        +{abstract}visitPrimitive(t:PrimitiveType, p:P) : R
+        +{abstract}visitTypeVariable(t:TypeVariable, p:P) : R
+        +{abstract}visitUnion(t:UnionType, p:P) : R
+        +{abstract}visitUnknown(type:TypeMirror, p:P) : R
+        +{abstract}visitWildcard(t:WildcardType, p:P) : R
+    }
+
+    interface type.UnionType <<interface>>
+    {
+        +{abstract}getAlternatives() : List<? extends TypeMirror>
+    }
+
+    class type.UnknownTypeException
+    {
+        +<<create>>UnknownTypeException(type:TypeMirror, p:Object)
+        + getArgument() : Object
+        + getUnknownType() : TypeMirror
+    }
+
+    interface type.WildcardType <<interface>>
+    {
+        +{abstract}getExtendsBound() : TypeMirror
+        +{abstract}getSuperBound() : TypeMirror
+    }
+
 
 }
 

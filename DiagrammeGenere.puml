@@ -1,0 +1,83 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam classFontStyle Bold
+skinparam style strictuml
+hide empty members
+
+package western
+{
+'jsp si c'est comme ca qu'on fait mais ca fait un fichier stylé
+CLASS Brigand
+{
+- recompense:Integer 
+- estLibre:boolean 
++  <<create>> Brigand ()
++  <<create>> Brigand ()
++  <<create>> Brigand ()
+
+}
+CLASS Ripou
+{
++  <<create>> Ripou ()
++  <<create>> Ripou ()
++  <<create>> Ripou ()
+
+}
+CLASS Substantif
+{
++  <<create>> Substantif ()
+
+}
+CLASS Histoire4
+{
++  <<create>> Histoire4 ()
+
+}
+INTERFACE Nommable<<interface>>
+{
+
+}
+CLASS Dame
+{
+- estLibre:boolean 
++  <<create>> Dame ()
++  <<create>> Dame ()
+
+}
+CLASS Personnage
+{
++  <<create>> Personnage ()
++  <<create>> Personnage ()
+
+}
+CLASS Cowboy
+{
+- gains:Integer 
++  <<create>> Cowboy ()
++  <<create>> Cowboy ()
+
+}
+INTERFACE HorsLaLoi<<interface>>
+{
+
+}
+ENUM Genre<<enum>>
+{
+-  <<create>> Genre ()
++ {static} {ReadOnly} FEMININ:western.Genre 
++ {static} {ReadOnly} MASCULIN:western.Genre 
+
+}
+CLASS Boisson
+{
++  <<create>> Boisson ()
+
+}
+CLASS Narrateur
+{
++  <<create>> Narrateur ()
++  <<create>> Narrateur ()
+
+}
+}
+@enduml

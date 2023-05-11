@@ -1,11 +1,20 @@
 package pumlFromJava;
 
+import com.sun.source.tree.Tree;
 import jdk.javadoc.doclet.Doclet;
 import jdk.javadoc.doclet.DocletEnvironment;
 import jdk.javadoc.doclet.Reporter;
 
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.PrimitiveType;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.type.TypeVariable;
+import javax.lang.model.util.Types;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -91,29 +100,23 @@ public class PumlDiagram implements Doclet
         ToolProvider toolProvider = ToolProvider.findFirst("javadoc").get();
         System.out.println(toolProvider.name());
 
-
-
-
-
         //La tableau d'arguement
         argument=new String[] {"-private","-sourcepath", "src", "-doclet",
-                "pumlFromJava.PumlDiagram", "-docletpath", "out/production/p-21-projet-renaud-matteo-gillig-matteo-tp-4", "western"
-                 };
-
+                "pumlFromJava.PumlDiagram", "-docletpath", "out/production/p-21-projet-renaud-matteo-gillig-matteo-tp-4", "western"};
 
         toolProvider.run(System.out, System.err, argument);
     }
 
     //La tableau d'arguement
     public static String []argument=new String[] {"-private","-sourcepath", "src", "-doclet",
-        "pumlFromJava.PumlDiagram", "-docletpath", "out/production/p-21-projet-renaud-matteo-gillig-matteo-tp-4",
+            "pumlFromJava.PumlDiagram", "-docletpath", "out/production/p-21-projet-renaud-matteo-gillig-matteo-tp-4",
             "western"};
     //jsp pk mais l'option -d donne l'erreur : javadoc: error - invalid flag: -d
     //Donc je choisis moi meme le chemin dans la methode de creation
 
     public void creation(Element element)
     {
-        String cheminVers="DiagrmmeGenere.puml";
+        String cheminVers="DiagrammeGenere.puml";
 
         //Créer ficher
         try
@@ -140,9 +143,9 @@ public class PumlDiagram implements Doclet
             FileWriter myWriter = new FileWriter(cheminVers);
             myWriter.write("@startuml\n");
             myWriter.write("skinparam classAttributeIconSize 0\n" +
-                                "skinparam classFontStyle Bold\n" +
-                                "skinparam style strictuml\n" +
-                                "hide empty members\n\n");
+                    "skinparam classFontStyle Bold\n" +
+                    "skinparam style strictuml\n" +
+                    "hide empty members\n\n");
 
             //Nom du package
             myWriter.write("package "+element.getSimpleName().toString()+"\n{\n");
@@ -152,7 +155,76 @@ public class PumlDiagram implements Doclet
             for(Element e:element.getEnclosedElements())
             {
                 //Le type et le nom
-                myWriter.write(e.getKind()+" "+e.toString()+"\n{\n}\n");
+                myWriter.write(e.getKind()+" "+e.getSimpleName());
+
+                //Enumeration ou interface
+                if(e.getKind()== ElementKind.INTERFACE)
+                {
+                    myWriter.write("<<interface>>\n{\n");
+                }
+                else if (e.getKind()==ElementKind.ENUM)
+                {
+                    myWriter.write("<<enum>>\n{\n");
+                }
+                else
+                    myWriter.write("\n{\n");
+
+                for(Element el:e.getEnclosedElements()) {
+                    //si c'est une champs (avec cela j'obtients toutes les variables de chaque classe
+                    //maintenant il faut faire attention aux roles et tout ca
+
+                    TypeMirror typeMirror = el.asType();
+                    TypeKind typeKind = typeMirror.getKind();
+
+                    if (typeKind.isPrimitive() || (/*e.getKind()== ElementKind.ENUM&&*/el.getKind() == ElementKind.ENUM_CONSTANT)) {
+
+
+                        for (Modifier mo : el.getModifiers()) {
+                            if (mo == Modifier.PUBLIC)
+                                myWriter.write("+ ");
+                            else if (mo == Modifier.PRIVATE)
+                                myWriter.write("- ");
+                            else if (mo == Modifier.PROTECTED)
+                                myWriter.write("# ");
+
+                            if (mo == Modifier.STATIC)
+                                myWriter.write("{static} ");
+                            if (mo == Modifier.FINAL)
+                                myWriter.write("{ReadOnly} ");
+                        }
+                        myWriter.write(el.getSimpleName().toString());
+
+                        String type = el.asType().toString();
+
+                        if (el.asType().getKind() == TypeKind.INT)
+                            type = "Integer";
+
+                        myWriter.write(":" + type + " ");
+
+                        myWriter.write("\n");
+
+                    }
+
+                    //el constructor 
+                    if (el.getKind() == ElementKind.CONSTRUCTOR) {
+                        for (Modifier mo : el.getModifiers()) {
+                            if (mo == Modifier.PUBLIC)
+                                myWriter.write("+ ");
+                            else if (mo == Modifier.PRIVATE)
+                                myWriter.write("- ");
+
+                        }
+                        myWriter.write(" <<create>> " + e.getSimpleName() + " (");
+                        for(Element ele:el.getEnclosedElements())
+                        {
+                            myWriter.write(ele.getSimpleName()+":"+ele.getKind().toString());
+                        }
+                        myWriter.write(")\n");
+                    }
+                }
+
+                myWriter.write("\n}\n");
+
             }
             //Fin du fichier
             myWriter.write("}\n@enduml");

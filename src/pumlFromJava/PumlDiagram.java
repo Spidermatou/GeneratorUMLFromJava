@@ -6,18 +6,13 @@ import jdk.javadoc.doclet.DocletEnvironment;
 import jdk.javadoc.doclet.Reporter;
 
 import javax.lang.model.SourceVersion;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.PrimitiveType;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.type.TypeVariable;
+import javax.lang.model.element.*;
+import javax.lang.model.type.*;
 import javax.lang.model.util.Types;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.util.*;
 import java.util.spi.ToolProvider;
 
@@ -101,21 +96,16 @@ public class PumlDiagram implements Doclet
         System.out.println(toolProvider.name());
 
         //La tableau d'arguement
-        argument=new String[] {"-private","-sourcepath", "src", "-doclet",
+        String []argument=new String[] {"-private","-sourcepath", "src", "-doclet",
                 "pumlFromJava.PumlDiagram", "-docletpath", "out/production/p-21-projet-renaud-matteo-gillig-matteo-tp-4", "western"};
-
+        //Jsp pk mais l'option -d donne l'erreur : javadoc: error - invalid flag: -d
+        //Donc je choisis moi meme le chemin dans la methode de creation
         toolProvider.run(System.out, System.err, argument);
     }
 
-    //La tableau d'arguement
-    public static String []argument=new String[] {"-private","-sourcepath", "src", "-doclet",
-            "pumlFromJava.PumlDiagram", "-docletpath", "out/production/p-21-projet-renaud-matteo-gillig-matteo-tp-4",
-            "western"};
-    //jsp pk mais l'option -d donne l'erreur : javadoc: error - invalid flag: -d
-    //Donc je choisis moi meme le chemin dans la methode de creation
-
     public void creation(Element element)
     {
+        //Je choisis moi-même le chemin vers le fichier
         String cheminVers="DiagrammeGenere.puml";
 
         //Créer ficher
@@ -141,45 +131,59 @@ public class PumlDiagram implements Doclet
         try
         {
             FileWriter myWriter = new FileWriter(cheminVers);
+
+            //L'en-tête du fichier
             myWriter.write("@startuml\n");
             myWriter.write("skinparam classAttributeIconSize 0\n" +
-                    "skinparam classFontStyle Bold\n" +
-                    "skinparam style strictuml\n" +
-                    "hide empty members\n\n");
+                                "skinparam classFontStyle Bold\n" +
+                                "skinparam style strictuml\n" +
+                                "hide empty members\n\n");
 
             //Nom du package
             myWriter.write("package "+element.getSimpleName().toString()+"\n{\n");
-            myWriter.write("'jsp si c'est comme ca qu'on fait mais ca fait un fichier stylé\n");
 
-            //Chaque élément
+            //Chaque élément présent dans le package
             for(Element e:element.getEnclosedElements())
             {
                 //Le type et le nom
                 myWriter.write(e.getKind()+" "+e.getSimpleName());
 
-                //Enumeration ou interface
+                //Si c'est une énumeration ou une interface
                 if(e.getKind()== ElementKind.INTERFACE)
                 {
+                    //J'ajoute le stéréotype <<interface>>
                     myWriter.write("<<interface>>\n{\n");
                 }
                 else if (e.getKind()==ElementKind.ENUM)
                 {
-                    myWriter.write("<<enum>>\n{\n");
+                    //Ou <<énumération>>
+                    myWriter.write("<<énumération>>\n{\n");
                 }
                 else
+                {
                     myWriter.write("\n{\n");
+                }
 
-                for(Element el:e.getEnclosedElements()) {
-                    //si c'est une champs (avec cela j'obtients toutes les variables de chaque classe
-                    //maintenant il faut faire attention aux roles et tout ca
-
+                //Pour chaque élements dans cet élement (donc chaque éléments dans la classe/énumération ou interface)
+                for(Element el:e.getEnclosedElements())
+                {
+                    //TypeMirror est une interface qui : représente un type en Java.
+                    //Les Types inclus les types primitifs, les types déclarer (classe et interface), tableau, variables et le type null.
+                    //Cela inclus aussi les Wildcard arguments, la signature et type de retour des méthodes et les pseudos correspondance aux package, modules et void.
                     TypeMirror typeMirror = el.asType();
+
+                    //TypeKind est une énumération d'un type de TypeMirror.
                     TypeKind typeKind = typeMirror.getKind();
 
-                    if (typeKind.isPrimitive() || (/*e.getKind()== ElementKind.ENUM&&*/el.getKind() == ElementKind.ENUM_CONSTANT)) {
-
-
-                        for (Modifier mo : el.getModifiers()) {
+                    //Dans l'interface TypeKind, il y a une méthode isPrimitive() qui permet de savoir si le type est primitif
+                    //Je teste aussi pour savoir si cet élément est une constante dans l'énumération
+                    if (typeKind.isPrimitive()||el.getKind() == ElementKind.ENUM_CONSTANT)
+                    {
+                        //Modifier est une énumération qui énumère les modificateur d'un élément (ex : private, public, protected, ...)
+                        //J'utilise la méthode getModifiers() de l'interface Element qui renvoie une liste des modificateurs de cet élément
+                        for (Modifier mo : el.getModifiers())
+                        {
+                            //En fonction du modificateur, j'écris +, - ou #
                             if (mo == Modifier.PUBLIC)
                                 myWriter.write("+ ");
                             else if (mo == Modifier.PRIVATE)
@@ -187,42 +191,46 @@ public class PumlDiagram implements Doclet
                             else if (mo == Modifier.PROTECTED)
                                 myWriter.write("# ");
 
+                            //Je peux aussi savoir si c'est static ou final
                             if (mo == Modifier.STATIC)
                                 myWriter.write("{static} ");
                             if (mo == Modifier.FINAL)
                                 myWriter.write("{ReadOnly} ");
                         }
+                        //Puis j'écris le nom de l'élément
                         myWriter.write(el.getSimpleName().toString());
 
+                        //Je récupère le type de l'élément en string
                         String type = el.asType().toString();
 
+                        //Je regarde si c'est un int, alors j'écris Integer en UML
                         if (el.asType().getKind() == TypeKind.INT)
                             type = "Integer";
 
                         myWriter.write(":" + type + " ");
-
                         myWriter.write("\n");
-
                     }
 
-                    //el constructor 
-                    if (el.getKind() == ElementKind.CONSTRUCTOR) {
-                        for (Modifier mo : el.getModifiers()) {
+                    //----Partie suivante----
+                    //Le constructeur
+                    //Si c'est un constructeur et que je ne suis pas dans une énumération
+                    if (el.getKind() == ElementKind.CONSTRUCTOR&&e.getKind()!=ElementKind.ENUM)
+                    {
+                        //Pour chaque modificateur
+                        for (Modifier mo : el.getModifiers())
+                        {
                             if (mo == Modifier.PUBLIC)
                                 myWriter.write("+ ");
                             else if (mo == Modifier.PRIVATE)
                                 myWriter.write("- ");
-
                         }
-                        myWriter.write(" <<create>> " + e.getSimpleName() + " (");
-                        for(Element ele:el.getEnclosedElements())
-                        {
-                            myWriter.write(ele.getSimpleName()+":"+ele.getKind().toString());
-                        }
-                        myWriter.write(")\n");
+                        //Il y a juste que el.toString() écrit le nom entier avec le package
+                        myWriter.write(" <<create>> " + el.toString() +"\n");
                     }
+                    //---------------------------
                 }
 
+                //Fin de la classe/interface/énumération
                 myWriter.write("\n}\n");
 
             }

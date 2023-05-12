@@ -1,0 +1,7 @@
+---------P21 Projet Semaine 2---------
+
+Nous avons fait le DCC du package javax.lang.model.
+Le DCC a pris beaucoup de temps.
+
+Le code genère une première version du DCA avec uniquement les types primitifs et sans associations.
+

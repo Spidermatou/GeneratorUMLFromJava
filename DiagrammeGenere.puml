@@ -6,31 +6,30 @@ hide empty members
 
 package western
 {
-'jsp si c'est comme ca qu'on fait mais ca fait un fichier stylé
 CLASS Brigand
 {
 - recompense:Integer 
 - estLibre:boolean 
-+  <<create>> Brigand ()
-+  <<create>> Brigand ()
-+  <<create>> Brigand ()
++  <<create>> Brigand(java.lang.String)
++  <<create>> Brigand(java.lang.String,western.Boisson)
++  <<create>> Brigand(java.lang.String,western.Boisson,java.lang.String)
 
 }
 CLASS Ripou
 {
-+  <<create>> Ripou ()
-+  <<create>> Ripou ()
-+  <<create>> Ripou ()
++  <<create>> Ripou(java.lang.String)
++  <<create>> Ripou(java.lang.String,western.Boisson)
++  <<create>> Ripou(java.lang.String,western.Boisson,java.lang.String)
 
 }
 CLASS Substantif
 {
-+  <<create>> Substantif ()
++  <<create>> Substantif(java.lang.String,western.Genre)
 
 }
 CLASS Histoire4
 {
-+  <<create>> Histoire4 ()
++  <<create>> Histoire4()
 
 }
 INTERFACE Nommable<<interface>>
@@ -40,43 +39,42 @@ INTERFACE Nommable<<interface>>
 CLASS Dame
 {
 - estLibre:boolean 
-+  <<create>> Dame ()
-+  <<create>> Dame ()
++  <<create>> Dame(java.lang.String)
++  <<create>> Dame(java.lang.String,western.Boisson)
 
 }
 CLASS Personnage
 {
-+  <<create>> Personnage ()
-+  <<create>> Personnage ()
++  <<create>> Personnage(java.lang.String)
++  <<create>> Personnage(java.lang.String,western.Boisson)
 
 }
 CLASS Cowboy
 {
 - gains:Integer 
-+  <<create>> Cowboy ()
-+  <<create>> Cowboy ()
++  <<create>> Cowboy(java.lang.String)
++  <<create>> Cowboy(java.lang.String,western.Boisson)
 
 }
 INTERFACE HorsLaLoi<<interface>>
 {
 
 }
-ENUM Genre<<enum>>
+ENUM Genre<<énumération>>
 {
--  <<create>> Genre ()
 + {static} {ReadOnly} FEMININ:western.Genre 
 + {static} {ReadOnly} MASCULIN:western.Genre 
 
 }
 CLASS Boisson
 {
-+  <<create>> Boisson ()
++  <<create>> Boisson(java.lang.String,western.Genre)
 
 }
 CLASS Narrateur
 {
-+  <<create>> Narrateur ()
-+  <<create>> Narrateur ()
++  <<create>> Narrateur()
++  <<create>> Narrateur(java.lang.String)
 
 }
 }

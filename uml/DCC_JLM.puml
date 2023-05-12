@@ -389,7 +389,379 @@ package javax.lang.model
         +{abstract}getSuperBound() : TypeMirror
     }
 
+    class util.AbstractAnnotationValueVisitor14<R,P>
+    {
+        -<<create>>AbstractAnnotationValueVisitor14()
+    }
 
+    class util.AbstractAnnotationValueVisitor6<R,P>
+        {
+            -<<create>>AbstractAnnotationValueVisitor6()
+        }
+
+    class util.AbstractAnnotationValueVisitor7<R,P>
+        {
+            -<<create>>AbstractAnnotationValueVisitor7()
+        }
+
+    class util.AbstractAnnotationValueVisitor8<R,P>
+        {
+            -<<create>>AbstractAnnotationValueVisitor8()
+        }
+
+    class util.AbstractAnnotationValueVisitor9<R,P>
+        {
+            -<<create>>AbstractAnnotationValueVisitor9()
+        }
+
+    class util.AbstractElementVisitor14<R,P>
+    {
+        -<<create>>AbstractElementVisitor14()
+        +{abstract}visitRecordComponent(e:RecordComponentElement,p:P) : abstract R
+    }
+
+    class util.AbstractElementVisitor6<R,P>
+    {
+        -<<create>>AbstractElementVisitor6()
+        + visit(e:Element) : final R
+        + visit(e:Element, p:P) : final R
+        + visitModule(e:ModuleElement, p:P) : R
+        + visitRecordComponent(e:RecordComponentElement,p:P) : R
+        + visitUnknown(e:Element, p:P) : R
+    }
+
+    class util.AbstractElementVisitor7<R,P>
+        {
+            -<<create>>AbstractElementVisitor7()
+        }
+
+    class util.AbstractElementVisitor8<R,P>
+        {
+            -<<create>>AbstractElementVisitor8()
+        }
+
+    class util.AbstractElementVisitor9<R,P>
+        {
+            -<<create>>AbstractElementVisitor9()
+            +{abstract}visitModule(e:ModuleElement,p:P) : abstract R
+        }
+
+    class util.AbstractTypeVisitor14<R,P>
+    {
+        -<<create>>AbstractTypeVisitor14()
+    }
+
+    class util.AbstractTypeVisitor6<R,P>
+    {
+        -<<create>>AbstractTypeVisitor6()
+        + visit(type:TypeMirror) : final R
+        + visit(type:TypeMirror, p:P) : final R
+        + visitIntersection(t:IntersectionType, p:P) : R
+        + visitUnion(t:UnionType, p:P) : R
+        + visitUnknown(type:TypeMirror, p:P) : R
+    }
+
+    class util.AbstractTypeVisitor7<R,P>
+    {
+        -<<create>>AbstractTypeVisitor7()
+        + visitUnion(t:UnionType, p:P) : abstract R
+    }
+
+    class util.AbstractTypeVisitor8<R,P>
+    {
+        -<<create>>AbstractTypeVisitor8()
+        + visitIntersection(t:IntersectionType, p:P) : abstract R
+    }
+
+    class util.AbstractTypeVisitor9<R,P>
+    {
+        -<<create>>AbstractTypeVisitor9()
+    }
+
+    class util.ElementFilter
+    {
+        +{static}constructorsIn(elements:Iterable<? extends Element>) : List<ExecutableElement>
+        +{static}constructorsIn(elements:Set<? extends Element>) : Set<ExecutableElement>
+        +{static}exportsIn(directives:Iterable<? extends ModuleElement.Directive>) : List<ModuleElement.ExportsDirective>
+        +{static}fieldsIn(elements:Iterable<? extends Element>) : List<VariableElement>
+        +{static}fieldsIn(elements:Set<? extends Element>) : Set<VariableElement>
+        +{static}methodsIn(elements:Iterable<? extends Element>) : List<ExecutableElement>
+        +{static}methodsIn(elements:Set<? extends Element>) : Set<ExecutableElement>
+        +{static}modulesIn(elements:Iterable<? extends Element>) : List<ModuleElement>
+        +{static}modulesIn(elements:Set<? extends Element>) : Set<ModuleElement>
+        +{static}opensIn(directives:Iterable<? extends ModuleElement.Directive>) : List<ModuleElement.OpensDirective>
+        +{static}packagesIn(elements:Iterable<? extends Element>) : List<PackageElement>
+        +{static}packagesIn(elements:Set<? extends Element>) : Set<PackageElement>
+        +{static}providesIn(directives:Iterable<? extends ModuleElement.Directive>) : List<ModuleElement.ProvidesDirective>
+        +{static}recordComponentIn(elements:Iterable<? extends Element>) : List<RecordComponentElement>
+        +{static}recordComponentIn(elements:Set<? extends Element>) : Set<RecordComponentElement>
+        +{static}requiresIn(directives:Iterable<? extends ModuleElement.Directive>) : List<ModuleElement.RequiresDirective>
+        +{static}typesIn(elements:Iterable<? extends Element>) : List<TypeElement>
+        +{static}typesIn(elements:Set<? extends Element>) : Set<TypeElement>
+        +{static}usesIn(directives:Iterable<? extends ModuleElement.Directive>) : List<ModuleElement.UsesDirective>
+
+    }
+
+    class util.ElementKindVisitor14<R,P>
+    {
+        -<<create>>ElementKindVisitor14()
+        -<<create>>ElementKindVisitor14(defaultValue:R)
+        + visitRecordComponent(e:RecordComponentElement, p:P) : R
+        + visitTypeAsRecord(e:TypeElement, p:P) : R
+        + visitVariableAsBindingVariable(e:VariableElement, p:P) : R
+    }
+
+    class util.ElementKindVisitor6<R,P>
+    {
+        -<<create>>ElementKindVisitor6()
+        -<<create>>ElementKindVisitor6(defaultValue:R)
+        + visitExecutable(e:ExecutableElement, p:P) : R
+        + visitExecutableAsConstructor(e:ExecutableElement, p:P) : R
+        + visitExecutableAsInstanceInit(e:ExecutableElement, p:P) : R
+        + visitExecutableAsMethod(e:ExecutableElement, p:P) : R
+        + visitExecutableAsStaticInit(e:ExecutableElement, p:P) : R
+        + visitPackage(e:PackageElement, p:P) : R
+        + visitType(e:TypeElement, p:P) : R
+        + visitTypeAsAnnotationType(e:TypeElement, p:P) : R
+        + visitTypeAsClass(e:TypeElement, p:P) : R
+        + visitTypeAsEnum(e:TypeElement, p:P) : R
+        + visitTypeAsInterface(e:TypeElement, p:P) : R
+        + visitTypeAsRecord(e:TypeElement, p:P) : R
+        + visitTypeParameter(e:TypeParameterElement, p:P) : R
+        + visitVariable(e:VariableElement, p:P) : R
+        + visitVariableAsBindingVariable(e:VariableElement, p:P) : R
+        + visitVariableAsEnumConstant(e:VariableElement, p:P) : R
+        + visitVariableAsExceptionParameter(e:VariableElement, p:P) : R
+        + visitVariableAsField(e:VariableElement, p:P) : R
+        + visitVariableAsLocalVariable(e:VariableElement, p:P) : R
+        + visitVariableAsParameter(e:VariableElement, p:P) : R
+        + visitVariableAsResourceVariable(e:VariableElement, p:P) : R
+    }
+
+    class util.ElementKindVisitor7<R,P>
+    {
+        -<<create>>ElementKindVisitor7()
+        -<<create>>ElementKindVisitor7(defaultValue:R)
+        + visitVariableAsResourceVariable(e:VariableElement, p:P) : R
+    }
+
+    class util.ElementKindVisitor8<R,P>
+    {
+        -<<create>>ElementKindVisitor8()
+        -<<create>>ElementKindVisitor8(defaultValue:R)
+    }
+
+    class util.ElementKindVisitor9<R,P>
+    {
+        -<<create>>ElementKindVisitor9()
+        -<<create>>ElementKindVisitor9(defaultValue:R)
+        + visitModule(e:ModuleElement, p:P) : R
+    }
+
+    interface util.Elements <<interface>>
+    {
+        +{static}enum Elements.Origin
+        +{abstract}getAllAnnotationMirrors(e:Element) : List<? extends AnnotationMirror>
+        +{abstract}getAllMembers(type:TypeElement) : List<? extends Element>
+        + getAllModuleElements() : default Set<? extends ModuleElement>
+        + getAllPackageElements(name:CharSequence) : default Set<? extends PackageElement>
+        + getAllTypeElements(name:CharSequence) : default Set<? extends TypeElement>
+        +{abstract}getBinaryName(type:TypeElement) : Name
+        +{abstract}getConstantExpression(value:Object) : String
+        +{abstract}getDocComment(e:Element) : String
+        +{abstract}getElementValuesWithDefaults(av:AnnotationMirror) : Map<? extends ExecutableElement, ? extends AnnotationValue>
+        + getFileObjectOf(e:Element) : default JavaFileObject
+        + getModuleElement(name:CharSequence) : default ModuleElement
+        + getModuleOf(e:Element) : default ModuleElement
+        +{abstract}getName(cs:CharSequence) : Name
+        + getOrigin(c:AnnotatedConstruct, a:AnnotationMirror) : default Elements.Origin
+        + getOrigin(e:Element) : default Elements.Origin
+        + getOrigin(m:ModuleElement, directive:ModuleElement.Directive) : default Elements.Origin
+        + getOutermostTypeElement(e:Element) : default TypeElement
+        +{abstract}getPackageElement(name:CharSequence) : PackageElement
+        + getPackageElement(module:ModuleElement, name:CharSequence) : default PackageElement
+        +{abstract}getPackageOf(e:Element) : PackageElement
+        +{abstract}getTypeElement(name:CharSequence) : TypeElement
+        + getTypeElement(module:ModuleElement, name:CharSequence) : default TypeElement
+        +{abstract}hides(hider:Element, hidden:Element) : boolean
+        + isAutomaticModule(module:ModuleElement) : default boolean
+        + isBridge(e:ExecutableElement) : default boolean
+        +{abstract}isDeprecated(e:Element) : boolean
+        +{abstract}isFunctionalInterface(type:TypeElement) : boolean
+        +{abstract}overrides(overrider:ExecutableElement, overridden:ExecutableElement, type:TypeElement) : boolean
+        +{abstract}printElements(w:Writer, elements:Element...)
+        + recordComponentFor(accessor:ExecutableElement) : default RecordComponentElement
+
+    }
+
+    enum util.Origin <<Enum>>
+    {
+        EXPLICIT
+        MANDATED
+        SYNTHETIC
+        + isDeclared() : boolean
+        +{static}valueOf(name:String) : Elements.Origin
+        +{static}values() : Elements.Origin[]
+    }
+
+    util.Origin --|> util.Elements
+
+    class util.ElementScanner14<R,P>
+    {
+        -<<create>>ElementsScanner14()
+        -<<create>>ElementsScanner14(defaultValue:R)
+        + visitExecutable(e:ExecutableElement, p:P) : R
+        + visitRecordComponent(e:RecordComponentElement, p:P) : R
+        + visitType(e:TypeElement, p:P) : R
+    }
+
+    class util.ElementScanner6<R,P>
+    {
+        -{final}DEFAULT_VALUE : R
+        -<<create>>ElementsScanner6()
+        -<<create>>ElementsScanner6(defaultValue:R)
+        + scan(iterable:Iterable<? extends Element>, p:P) : final R
+        + scan(e:Element) : final R
+        + scan(e:Element, p:P) : R
+        + visitExecutable(e:ExecutableElement, p:P) : R
+        + visitPackage(e:PackageElement, p:P) : R
+        + visitType(e:TypeElement, p:P) : R
+        + visitTypeParameter(e:TypeParameterElement, p:P) : R
+        + visitVariable(e:VariableElement, p:P) : R
+    }
+
+    class util.ElementScanner7<R,P>
+    {
+        -<<create>> ElementsScanner7()
+        -<<create>> ElementsScanner7(defaultValue:R)
+        + visitVariable(e:VariableElement, p:P) : R
+    }
+
+    class util.ElementScanner8<R,P>
+    {
+        -<<create>> ElementsScanner8()
+        -<<create>> ElementsScanner8(defaultValue:R)
+    }
+
+    class util.ElementScanner9<R,P>
+    {
+        -<<create>>ElementsScanner9()
+        -<<create>>ElementsScanner9(defaultValue:R)
+        + visitModule(e:ModuleElement, p:P) : R
+    }
+
+    class util.SimpleAnnotationValueVisitor14<R,P>
+    {
+        -<<create>>SimpleAnnotationValueVisitor14()
+        -<<create>>SimpleAnnotationValueVisitor14(defaultValue:R)
+    }
+
+    class util.SimpleAnnotationValueVisitor6<R,P>
+    {
+        -{final}DEFAULT_VALUE : R
+        -<<create>>SimpleAnnotationValueVisitor6()
+        -<<create>>SimpleAnnotationValueVisitor6(defaultValue:R)
+        - defaultAction(o:Object, p:P) : R
+        + visitAnnotation(a:AnnotationMirror, p:P) : R
+        + visitArray(vals:List<? extends AnnotationValue>, p:P) : R
+        + visitBoolean(b:boolean, p:P) : R
+        + visitByte(b:byte, p:P) : R
+        + visitChar(c:char, p:P) : R
+        + visitDouble(d:double, p:P) : R
+        + visitEnumConstant(c:VariableElement, p:P) : R
+        + visitFloat(f:Float, p:P) : R
+        + visitInt(i:Integer, p:P) : R
+        + visitLong(i:long , p:P) : R
+        + visitShort(s:short, p:P) : R
+        + visitString(s:String, p:P) : R
+        + visitType(t:TypeMirror, p:P) : R
+    }
+
+    class util.SimpleAnnotationValueVisitor7<R,P>
+    {
+        -<<create>>SimpleAnnotationValueVisitor7()
+        -<<create>>SimpleAnnotationValueVisitor7(defaultValue:R)
+    }
+
+    class util.SimpleAnnotationValueVisitor8<R,P>
+    {
+        -<<create>>SimpleAnnotationValueVisitor8()
+        -<<create>>SimpleAnnotationValueVisitor8(defaultValue:R)
+    }
+
+    class util.SimpleAnnotationValueVisitor9<R,P>
+    {
+        -<<create>>SimpleAnnotationValueVisitor9()
+        -<<create>>SimpleAnnotationValueVisitor9(defaultValue:R)
+    }
+
+    class util.SimpleElementVisitor14<R,P>
+    {
+        -<<create>>SimpleElementVisitor14()
+        -<<create>>SimpleElementVisitor14(defaultValue:R)
+        + visitRecordComponent(e:RecordComponentElement, p:P) : R
+    }
+
+    class util.SimpleElementVisitor6<R,P>
+    {
+        -{final}DEFAULT_VALUE : R
+        -<<create>>SimpleElementVisitor6()
+        -<<create>>SimpleElementVisitor6(defaultValue:R)
+        - defaultAction(e:Element, p:P) : R
+        + visitExecutable(e:ExecutableElement, p:P) : R
+        + visitPackage(e:PackageElement, p:P) : R
+        + visitType(e:TypeElement, p:P) : R
+        + visitTypeParameter(e:TypeParameterElement, p:P) : R
+        + visitVariable(e:VariableElement, p:P) : R
+    }
+
+    class util.SimpleElementVisitor7<R,P>
+    {
+        -<<create>>SimpleElementVisitor7()
+        -<<create>>SimpleElementVisitor7(defaultValue:R)
+        +visitVariable(e:VariableElement, p:P) : R
+    }
+
+    class util.SimpleElementVisitor8<R,P>
+    {
+        -<<create>>SimpleElementVisitor8()
+        +<<create>>SimpleElementVisitor8(defaultValue:R)
+    }
+
+    class util.SimpleElementVisitor9<R,P>
+    {
+        -<<create>>SimpleElementVisitor9()
+        -<<create>>SimpleElementVisitor9(defaultValue:R)
+        + visitModule(e:ModuleElement, p:P) : R
+    }
+
+    class util.SimpleTypeVisitor14<R,P>
+    {
+        -<<create>>SimpleTypeVisitor14()
+        -<<create>>SimpleTypeVisitor14(defaultValue:R)
+    }
+
+    class util.SimpleTypeVisitor6<R,P>
+    {
+        -{final}DEFAULT_VALUE : R
+        -<<create>>SimpleTypeVisitor6()
+        -<<create>>SimpleTypeVisitor6(defaultValue:R)
+    }
+
+    class util.SimpleTypeVisitor7<R,P>
+    {
+
+    }
+
+    class util.SimpleTypeVisitor8<R,P>
+    {
+
+    }
+
+    class util.SimpleTypeVisitor9<R,P>
+    {
+
+    }
 }
 
 @enduml

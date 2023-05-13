@@ -746,22 +746,330 @@ package javax.lang.model
         -{final}DEFAULT_VALUE : R
         -<<create>>SimpleTypeVisitor6()
         -<<create>>SimpleTypeVisitor6(defaultValue:R)
+        - defaultAction(type:TypeMirror, p:P) : R
+        + visitArray(t:ArrayType, p:P) : R
+        + visitDeclared(t:DeclaredType, p:P) : R
+        + visitError(t:ErrorType, p:P) : R
+        + visitExecutable(t:ExecutableType, p:P) : R
+        + visitNoType(t:NoType, p:P) : R
+        + visitNull(t:NullType, p:P) : R
+        + visitPrimitive(t:PrimitiveType, p:P) : R
+        + visitTypeVariable(t:TypeVariable, p:P) : R
+        + visitWildcard(t:WildcardType, p:P) : R
     }
 
     class util.SimpleTypeVisitor7<R,P>
     {
-
+        -<<create>>SimpleTypeVisitor7()
+        -<<create>>SimpleTypeVisitor7(defaultValue:R)
+        + visitUnion(t:UnionType, p:P) : R
     }
 
     class util.SimpleTypeVisitor8<R,P>
     {
-
+        -<<create>>SimpleTypeVisitor8()
+        -<<create>>SimpleTypeVisitor8(defaultValue:R)
+        + visitIntersection(t:IntersectionType, p:P) : R
     }
 
     class util.SimpleTypeVisitor9<R,P>
     {
+        -<<create>>SimpleTypeVisitor9()
+        -<<create>>SimpleTypeVisitor9(defaultValue:R)
+    }
 
+    class util.TypeKindVisitor14<R,P>
+    {
+        -<<create>>TypeKindVisitor14()
+        -<<create>>TypeKindVisitor14(defaultValue:R)
+    }
+
+    class util.TypeKindVisitor6<R,P>
+    {
+        -<<create>>TypeKindVisitor6()
+        -<<create>>TypeKindVisitor6(defaultValue:R)
+        + visitNoType(t:NoType, p:P) : R
+        + visitTypeAsModule(t:NoType, p:P) : R
+        + visitNoTypeAsNone(t:NoType, p:P) : R
+        + visitNoTypeAsPackage(t:NoType, p:P) : R
+        + visitNoTypeAsVoid(t:NoType, p:P) : R
+        + visitPrimitive(t:PrimitiveType, p:P) : R
+        + visitPrimitiveAsBoolean(t:PrimitiveType, p:P) : R
+        + visitPrimitiveAsByte(t:PrimitiveType, p:P) : R
+        + visitPrimitiveAsChar(t:PrimitiveType, p:P) : R
+        + visitPrimitiveAsDouble(t:PrimitiveType, p:P) : R
+        + visitPrimitiveAsFloat(t:PrimitiveType, p:P) : R
+        + visitPrimitiveAsInt(t:PrimitiveType, p:P) : R
+        + visitPrimitiveAsLong(t:PrimitiveType, p:P) : R
+        + visitPrimitiveAsShort(t:PrimitiveType, p:P) : R
+    }
+
+    class util.TypeKindVisitor7<R,P>
+    {
+        -<<create>>TypeKindVisitor7()
+        -<<create>>TypeKindVisitor7(defaultValue:R)
+        + visitUnion(t:UnionType, p:P) : R
+    }
+
+    class util.TypeKindVisitor8<R,P>
+    {
+        -<<create>>TypeKindVisitor8()
+        -<<create>>TypeKindVisitor8(defaultValue:R)
+        + visitIntersection(t:IntersectionType, p:P) : R
+    }
+
+    class util.TypeKindVisitor9<R,P>
+    {
+        -<<create>>TypeKindVisitor9()
+        -<<create>>TypeKindVisitor9(defaultValue:R)
+        + visitNoTypeAsModule(t:NoType, p:P) : R
+    }
+
+    interface util.Types <<interface>>
+    {
+        +{abstract}asElement(type:TypeMirror) : Element
+        +{abstract}asMemberOf(containing:DeclaredType, element:Element) : TypeMirror
+        +{abstract}boxedClass(p:PrimitiveType) : TypeElement
+        +{abstract}capture(type:TypeMirror) : TypeMirror
+        +{abstract}contains(t1:TypeMirror, t2:TypeMirror) : boolean
+        +{abstract}directSupertypes(t:TypeMirror) : List<? extends TypeMirror>
+        +{abstract}erasure(t:TypeMirror) : TypeMirror
+        +{abstract}getArrayType(componentType:TypeMirror) : ArrayType
+        +{abstract}getDeclaredType(typeElem:TypeElement, typeArgs:TypeMirror...) : DeclaredType
+        +{abstract}getDeclaredType(containing:DeclaredType, typeElem:TypeElement, typeArgs:TypeMirror...) : DeclaredType
+        +{abstract}getNoType(kind:TypeKind) : NoType
+        +{abstract}getNullType() : NullType
+        +{abstract}getPrimitiveType(kind:TypeKind) : PrimitiveType
+        +{abstract}getWildcardType(extendsBound:TypeMirror, superBound:TypeMirror) : WildcardType
+        +{abstract}isAssignable(t1:TypeMirror, t2:TypeMirror) : boolean
+        +{abstract}isSameType(t1:TypeMirror, t2:TypeMirror) : boolean
+        +{abstract}isSubsignature(m1:ExecutableType, m2:ExecutableType) : boolean
+        +{abstract}isSubtype(t1:TypeMirror, t2:TypeMirror) : boolean
+        +{abstract}unboxedType(t:TypeMirror) : PrimitiveType
+    }
+
+    interface AnnotatedConstruct <<interface>>
+    {
+        +{abstract}getAnnotation(annotationType:Class<A>) : <A extends Annotation> A
+        +{abstract}getAnnotationMirrors() : List<? extends AnnotationMirror>
+        +{abstract}getAnnotationByType(annotationType:Class<A>) : <A extends Annotation> A[]
+    }
+
+    enum SourceVersion <<enumeration>>
+    {
+        RELEASE_0
+        RELEASE_1
+        RELEASE_10
+        RELEASE_11
+        RELEASE_12
+        RELEASE_13
+        RELEASE_14
+        RELEASE_15
+        RELEASE_16
+        RELEASE_17
+        RELEASE_18
+        RELEASE_19
+        RELEASE_2
+        RELEASE_3
+        RELEASE_4
+        RELEASE_5
+        RELEASE_6
+        RELEASE_7
+        RELEASE_8
+        RELEASE_9
+        +{static}isIdentifier(name:CharSequence) : boolean
+        +{static}isKeyWord(s:CharSequence) : boolean
+        +{static}isKeyWord(s:CharSequence, version:SourceVersion) : boolean
+        +{static}isName(name:CharSequence) : boolean
+        +{static}isName(name:CharSequence, version:SourceVersion) : boolean
+        +{static}latest() : SourceVersion
+        +{static}latestSupported() : SourceVersion
+        + runtimeVersion() : Runtime.Version
+        +{static}valueOf(rv:Runtime.Version) : SourceVersion
+        +{static}valueOf(name:String) : SourceVersion
+        +{static}values() : SourceVersion[]
+    }
+
+    class UnknownEntityException
+    {
+        -<<create>>UnknownEntityException(message:String)
     }
 }
+
+javax.lang.model.SourceVersion --|> java.lang.Enum
+
+javax.lang.model.UnknownEntityException --|> java.lang.Throwable
+
+javax.lang.model.element.Element --|> javax.lang.model.AnnotatedConstruct
+
+javax.lang.model.element.ElementKind --|> java.lang.Enum
+
+javax.lang.model.element.ExecutableElement --|> javax.lang.model.element.Element
+
+javax.lang.model.element.ExecutableElement --|> javax.lang.model.element.Parameterizable
+
+javax.lang.model.element.Modifier --|> java.lang.Enum
+
+javax.lang.model.element.ModuleElement --|> javax.lang.model.element.Element
+
+javax.lang.model.element.ModuleElement --|> javax.lang.model.element.QualifiedNameable
+
+javax.lang.model.element.Name --|> java.lang.CharSequence
+
+javax.lang.model.element.NestingKind --|> java.lang.Enum
+
+javax.lang.model.element.PackageElement --|> javax.lang.model.element.Element
+
+javax.lang.model.element.PackageElement --|> javax.lang.model.element.QualifiedNameable
+
+javax.lang.model.element.Parameterizable --|> javax.lang.model.element.Element
+
+javax.lang.model.element.QualifiedNameable --|> javax.lang.model.element.Element
+
+javax.lang.model.element.RecordComponentElement --|> javax.lang.model.element.Element
+
+javax.lang.model.element.TypeElement --|> javax.lang.model.element.Element
+
+javax.lang.model.element.TypeElement --|> javax.lang.model.element.Parameterizable
+
+javax.lang.model.element.TypeElement --|> javax.lang.model.element.QualifiedNameable
+
+javax.lang.model.element.TypeParameterElement --|> javax.lang.model.element.Element
+
+javax.lang.model.element.UnknownAnnotationValueException --|> javax.lang.model.UnknownEntityException
+
+javax.lang.model.element.UnknownDirectiveException --|> javax.lang.model.UnknownEntityException
+
+javax.lang.model.element.UnknownElementException --|> javax.lang.model.UnknownEntityException
+
+javax.lang.model.element.VariableElement --|> javax.lang.model.element.Element
+
+javax.lang.model.type.ArrayType --|> javax.lang.model.type.ReferenceType
+
+javax.lang.model.type.DeclaredType --|> javax.lang.model.type.ReferenceType
+
+javax.lang.model.type.ErrorType --|> javax.lang.model.type.DeclaredType
+
+javax.lang.model.type.ExecutableType --|> javax.lang.model.type.TypeMirror
+
+javax.lang.model.type.IntersectionType --|> javax.lang.model.type.TypeMirror
+
+javax.lang.model.type.MirroredTypeException --|> javax.lang.model.type.MirroredTypesException
+
+javax.lang.model.type.MirroredTypesException --|> java.lang.Throwable
+
+javax.lang.model.type.NoType --|> javax.lang.model.type.TypeMirror
+
+javax.lang.model.type.NullType --|> javax.lang.model.type.ReferenceType
+
+javax.lang.model.type.PrimitiveType --|> javax.lang.model.type.TypeMirror
+
+javax.lang.model.type.ReferenceType --|> javax.lang.model.type.TypeMirror
+
+javax.lang.model.type.TypeKind --|> java.lang.Enum
+
+javax.lang.model.type.TypeMirror --|> javax.lang.model.AnnotatedConstruct
+
+javax.lang.model.type.TypeVariable --|> javax.lang.model.type.ReferenceType
+
+javax.lang.model.type.UnionType --|> javax.lang.model.type.TypeMirror
+
+javax.lang.model.type.UnknownTypeException --|> javax.lang.model.UnknownEntityException
+
+javax.lang.model.type.WildcardType --|> javax.lang.model.type.TypeMirror
+
+javax.lang.model.util.AbstractAnnotationValueVisitor14 --|> javax.lang.model.util.AbstractAnnotationValueVisitor9
+
+javax.lang.model.util.AbstractAnnotationValueVisitor6 --|> java.lang.Object
+
+javax.lang.model.util.AbstractAnnotationValueVisitor7 --|> javax.lang.model.util.AbstractAnnotationValueVisitor6
+
+javax.lang.model.util.AbstractAnnotationValueVisitor8 --|> javax.lang.model.util.AbstractAnnotationValueVisitor7
+
+javax.lang.model.util.AbstractAnnotationValueVisitor9 --|> javax.lang.model.util.AbstractAnnotationValueVisitor8
+
+javax.lang.model.util.AbstractElementVisitor14 --|> javax.lang.model.util.AbstractElementVisitor9
+
+javax.lang.model.util.AbstractElementVisitor6 --|> java.lang.Object
+
+javax.lang.model.util.AbstractElementVisitor7 --|> javax.lang.model.util.AbstractElementVisitor6
+
+javax.lang.model.util.AbstractElementVisitor8 --|> javax.lang.model.util.AbstractElementVisitor7
+
+javax.lang.model.util.AbstractElementVisitor9 --|> javax.lang.model.util.AbstractElementVisitor8
+
+javax.lang.model.util.AbstractTypeVisitor14 --|> javax.lang.model.util.AbstractTypeVisitor9
+
+javax.lang.model.util.AbstractTypeVisitor6 --|> java.lang.Object
+
+javax.lang.model.util.AbstractTypeVisitor7 --|> javax.lang.model.util.AbstractTypeVisitor6
+
+javax.lang.model.util.AbstractTypeVisitor8 --|> javax.lang.model.util.AbstractTypeVisitor7
+
+javax.lang.model.util.AbstractTypeVisitor9 --|> javax.lang.model.util.AbstractTypeVisitor8
+
+javax.lang.model.util.ElementFilter --|> java.lang.Object
+
+javax.lang.model.util.ElementKindVisitor14 --|> javax.lang.model.util.ElementKindVisitor9
+
+javax.lang.model.util.ElementKindVisitor6 --|> java.lang.Object
+
+javax.lang.model.util.ElementKindVisitor7 --|> javax.lang.model.util.ElementKindVisitor6
+
+javax.lang.model.util.ElementKindVisitor8 --|> javax.lang.model.util.ElementKindVisitor7
+
+javax.lang.model.util.ElementKindVisitor9 --|> javax.lang.model.util.ElementKindVisitor8
+
+javax.lang.model.util.ElementScanner14 --|> javax.lang.model.util.ElementScanner9
+
+javax.lang.model.util.ElementScanner6 --|> java.lang.Object
+
+javax.lang.model.util.ElementScanner7 --|> javax.lang.model.util.ElementScanner6
+
+javax.lang.model.util.ElementScanner8 --|> javax.lang.model.util.ElementScanner7
+
+javax.lang.model.util.ElementScanner9 --|> javax.lang.model.util.ElementScanner8
+
+javax.lang.model.util.SimpleAnnotationValueVisitor14 --|> javax.lang.model.util.SimpleAnnotationValueVisitor9
+
+javax.lang.model.util.SimpleAnnotationValueVisitor6 --|> java.lang.Object
+
+javax.lang.model.util.SimpleAnnotationValueVisitor7 --|> javax.lang.model.util.SimpleAnnotationValueVisitor6
+
+javax.lang.model.util.SimpleAnnotationValueVisitor8 --|> javax.lang.model.util.SimpleAnnotationValueVisitor7
+
+javax.lang.model.util.SimpleAnnotationValueVisitor9 --|> javax.lang.model.util.SimpleAnnotationValueVisitor8
+
+javax.lang.model.util.SimpleElementVisitor14 --|> javax.lang.model.util.SimpleElementVisitor9
+
+javax.lang.model.util.SimpleElementVisitor6 --|> java.lang.Object
+
+javax.lang.model.util.SimpleElementVisitor7 --|> javax.lang.model.util.SimpleElementVisitor6
+
+javax.lang.model.util.SimpleElementVisitor8 --|> javax.lang.model.util.SimpleElementVisitor7
+
+javax.lang.model.util.SimpleElementVisitor9 --|> javax.lang.model.util.SimpleElementVisitor8
+
+javax.lang.model.util.SimpleTypeVisitor14 --|> javax.lang.model.util.SimpleTypeVisitor9
+
+javax.lang.model.util.SimpleTypeVisitor6 --|> java.lang.Object
+
+javax.lang.model.util.SimpleTypeVisitor7 --|> javax.lang.model.util.SimpleTypeVisitor6
+
+javax.lang.model.util.SimpleTypeVisitor8 --|> javax.lang.model.util.SimpleTypeVisitor7
+
+javax.lang.model.util.SimpleTypeVisitor9 --|> javax.lang.model.util.SimpleTypeVisitor8
+
+javax.lang.model.util.TypeKindVisitor14 --|> javax.lang.model.util.TypeKindVisitor9
+
+javax.lang.model.util.TypeKindVisitor6 --|> java.lang.Object
+
+javax.lang.model.util.TypeKindVisitor7 --|> javax.lang.model.util.TypeKindVisitor6
+
+javax.lang.model.util.TypeKindVisitor8 --|> javax.lang.model.util.TypeKindVisitor7
+
+javax.lang.model.util.TypeKindVisitor9 --|> javax.lang.model.util.TypeKindVisitor8
+
+
 
 @enduml

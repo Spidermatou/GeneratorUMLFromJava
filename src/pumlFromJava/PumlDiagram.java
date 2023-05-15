@@ -142,6 +142,10 @@ public class PumlDiagram implements Doclet
             //Nom du package
             myWriter.write("package "+element.getSimpleName().toString()+"\n{\n");
 
+            ArrayList<String> interfaces=new ArrayList<>();
+            ArrayList<String> heritages=new ArrayList<>();
+            ArrayList<String> associations=new ArrayList<>();
+
             //Chaque élément présent dans le package
             for(Element e:element.getEnclosedElements())
             {
@@ -211,9 +215,64 @@ public class PumlDiagram implements Doclet
                         myWriter.write("\n");
                     }
 
+                    //----Partie Association-----
+
+
+                    TypeElement typeElement=(TypeElement) el.getEnclosingElement();
+
+                    for(TypeMirror tm:typeElement.getInterfaces())
+                    {
+                        /*
+                        if((ElementKind) tm.getKind()==ElementKind.INTERFACE)
+                        {
+                            if (!interfaces.contains(subStr(tm.toString()) + " <|-- " + e.getSimpleName()))
+                                interfaces.add((subStr(tm.toString()) + " <|-- " + e.getSimpleName()));
+                        }
+                        else*/
+                        {
+
+                            if (!interfaces.contains(subStr(tm.toString()) + " <|... " + e.getSimpleName()))
+                                interfaces.add((subStr(tm.toString()) + " <|... " + e.getSimpleName()));
+                        }
+                    }
+
+                    TypeMirror heritageSilYA=typeElement.getSuperclass();
+
+                    if(heritageSilYA.toString()!="none"&&e.getKind()!= ElementKind.ENUM)
+                    {
+                        if(!heritageSilYA.toString().equals("java.lang.Object"))
+                        {
+                            if (!heritages.contains(subStr(heritageSilYA.toString()) + " <|--- " + subStr(e.getSimpleName().toString())))
+                                heritages.add(subStr(heritageSilYA.toString()) + " <|--- " + subStr(e.getSimpleName().toString()));
+                        }
+                    }
+
+                    System.out.println(subStr("western.Cowboy"));
+                    System.out.println(heritageSilYA.toString());
+
+                    //----Partie use-----
+
+
+
+                        if (!typeKind.isPrimitive()&&el.getKind()!=ElementKind.METHOD)
+                        {
+                            if(el.getKind()!=ElementKind.CONSTRUCTOR&&el.getKind()!=ElementKind.ENUM_CONSTANT)
+                            {
+                            if(!associations.contains(e.getSimpleName()+" "+subStr(el.getSimpleName().toString()) +" : "+e.getSimpleName()));
+                                associations.add(e.getSimpleName()+" "+subStr(el.getSimpleName().toString()) +" : "+e.getSimpleName());
+                            }//Brigand --Cowboy:captures
+
+
+                        }
+
+
+
+
+
                     //----Partie suivante----
                     //Le constructeur
                     //Si c'est un constructeur et que je ne suis pas dans une énumération
+                    /*
                     if (el.getKind() == ElementKind.CONSTRUCTOR&&e.getKind()!=ElementKind.ENUM)
                     {
                         //Pour chaque modificateur
@@ -226,7 +285,7 @@ public class PumlDiagram implements Doclet
                         }
                         //Il y a juste que el.toString() écrit le nom entier avec le package
                         myWriter.write(" <<create>> " + el.toString() +"\n");
-                    }
+                    }*/
                     //---------------------------
                 }
 
@@ -234,6 +293,18 @@ public class PumlDiagram implements Doclet
                 myWriter.write("\n}\n");
 
             }
+
+
+
+            for(String s:interfaces)
+                myWriter.write("\n"+s+"\n");
+
+            for(String s:heritages)
+                myWriter.write("\n"+s+"\n");
+
+            for(String s:associations)
+                myWriter.write("\n"+s+"\n");
+
             //Fin du fichier
             myWriter.write("}\n@enduml");
             myWriter.close();
@@ -245,5 +316,25 @@ public class PumlDiagram implements Doclet
             System.out.println("Erreur d'écriture.");
             e.printStackTrace();
         }
+    }
+
+    public static String subStr(String nom)
+    {
+        String retour="";
+        int position=0;
+        for(int i=0;i<nom.length();i++)
+        {
+            if(nom.charAt(i)=='.')
+            {
+                position=i;
+            }
+        }
+
+        if(position==0)
+            retour=nom;
+        else
+            retour=nom.substring(position+1,nom.length());
+
+        return retour;
     }
 }

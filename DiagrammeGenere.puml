@@ -10,26 +10,18 @@ CLASS Brigand
 {
 - recompense:Integer 
 - estLibre:boolean 
-+  <<create>> Brigand(java.lang.String)
-+  <<create>> Brigand(java.lang.String,western.Boisson)
-+  <<create>> Brigand(java.lang.String,western.Boisson,java.lang.String)
 
 }
 CLASS Ripou
 {
-+  <<create>> Ripou(java.lang.String)
-+  <<create>> Ripou(java.lang.String,western.Boisson)
-+  <<create>> Ripou(java.lang.String,western.Boisson,java.lang.String)
 
 }
 CLASS Substantif
 {
-+  <<create>> Substantif(java.lang.String,western.Genre)
 
 }
 CLASS Histoire4
 {
-+  <<create>> Histoire4()
 
 }
 INTERFACE Nommable<<interface>>
@@ -39,21 +31,15 @@ INTERFACE Nommable<<interface>>
 CLASS Dame
 {
 - estLibre:boolean 
-+  <<create>> Dame(java.lang.String)
-+  <<create>> Dame(java.lang.String,western.Boisson)
 
 }
 CLASS Personnage
 {
-+  <<create>> Personnage(java.lang.String)
-+  <<create>> Personnage(java.lang.String,western.Boisson)
 
 }
 CLASS Cowboy
 {
 - gains:Integer 
-+  <<create>> Cowboy(java.lang.String)
-+  <<create>> Cowboy(java.lang.String,western.Boisson)
 
 }
 INTERFACE HorsLaLoi<<interface>>
@@ -68,14 +54,65 @@ ENUM Genre<<énumération>>
 }
 CLASS Boisson
 {
-+  <<create>> Boisson(java.lang.String,western.Genre)
 
 }
 CLASS Narrateur
 {
-+  <<create>> Narrateur()
-+  <<create>> Narrateur(java.lang.String)
 
 }
+
+HorsLaLoi <|... Brigand
+
+HorsLaLoi <|... Ripou
+
+Nommable <|... Personnage
+
+Nommable <|... HorsLaLoi
+
+Personnage <|--- Brigand
+
+Cowboy <|--- Ripou
+
+Personnage <|--- Dame
+
+Personnage <|--- Cowboy
+
+Personnage <|--- Narrateur
+
+Brigand LOOK_PAR_DEFAUT : Brigand
+
+Brigand look : Brigand
+
+Brigand captives : Brigand
+
+Brigand gardien : Brigand
+
+Brigand boissonParDefaut : Brigand
+
+Ripou brigand : Ripou
+
+Substantif nom : Substantif
+
+Substantif genre : Substantif
+
+Dame sauveur : Dame
+
+Dame ravisseur : Dame
+
+Dame boissonParDefaut : Dame
+
+Personnage BOISSON_PAR_DEFAUT : Personnage
+
+Personnage nom : Personnage
+
+Personnage boisson : Personnage
+
+Cowboy captures : Cowboy
+
+Cowboy boissonParDefaut : Cowboy
+
+Boisson substantif : Boisson
+
+Boisson EAU : Boisson
 }
 @enduml

@@ -79,40 +79,40 @@ Personnage <|--- Cowboy
 
 Personnage <|--- Narrateur
 
-Brigand LOOK_PAR_DEFAUT : Brigand
+Brigand --- String : LOOK_PAR_DEFAUT
 
-Brigand look : Brigand
+Brigand --- String : look
 
-Brigand captives : Brigand
+Brigand --- Dame : captives
 
-Brigand gardien : Brigand
+Brigand --- Cowboy : gardien
 
-Brigand boissonParDefaut : Brigand
+Brigand --- Boisson : boissonParDefaut
 
-Ripou brigand : Ripou
+Ripou --- Brigand : brigand
 
-Substantif nom : Substantif
+Substantif --- String : nom
 
-Substantif genre : Substantif
+Substantif --- Genre : genre
 
-Dame sauveur : Dame
+Dame --- Cowboy : sauveur
 
-Dame ravisseur : Dame
+Dame --- HorsLaLoi : ravisseur
 
-Dame boissonParDefaut : Dame
+Dame --- Boisson : boissonParDefaut
 
-Personnage BOISSON_PAR_DEFAUT : Personnage
+Personnage --- Boisson : BOISSON_PAR_DEFAUT
 
-Personnage nom : Personnage
+Personnage --- String : nom
 
-Personnage boisson : Personnage
+Personnage --- Boisson : boisson
 
-Cowboy captures : Cowboy
+Cowboy --- HorsLaLoi : captures
 
-Cowboy boissonParDefaut : Cowboy
+Cowboy --- Boisson : boissonParDefaut
 
-Boisson substantif : Boisson
+Boisson --- Substantif : substantif
 
-Boisson EAU : Boisson
+Boisson --- Boisson : EAU
 }
 @enduml

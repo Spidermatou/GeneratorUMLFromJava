@@ -258,9 +258,9 @@ public class PumlDiagram implements Doclet
                         {
                             if(el.getKind()!=ElementKind.CONSTRUCTOR&&el.getKind()!=ElementKind.ENUM_CONSTANT)
                             {
-                            if(!associations.contains(e.getSimpleName()+" "+subStr(el.getSimpleName().toString()) +" : "+e.getSimpleName()));
-                                associations.add(e.getSimpleName()+" "+subStr(el.getSimpleName().toString()) +" : "+e.getSimpleName());
-                            }//Brigand --Cowboy:captures
+                            if(!associations.contains(e.getSimpleName()+" --- "+subStr(el.asType().toString())+" : "+subStr(el.getSimpleName().toString())));
+                                associations.add(e.getSimpleName()+" --- "+subStr(el.asType().toString())+" : "+subStr(el.getSimpleName().toString()));
+                            }
 
 
                         }

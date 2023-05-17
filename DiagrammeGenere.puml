@@ -8,6 +8,8 @@ package western
 {
 CLASS Brigand
 {
+# {static} LOOK_PAR_DEFAUT:String
+- look:String
 - recompense:Integer 
 - estLibre:boolean 
 
@@ -18,6 +20,7 @@ CLASS Ripou
 }
 CLASS Substantif
 {
+- nom:String
 
 }
 CLASS Histoire4
@@ -35,6 +38,7 @@ CLASS Dame
 }
 CLASS Personnage
 {
+- nom:String
 
 }
 CLASS Cowboy
@@ -48,8 +52,8 @@ INTERFACE HorsLaLoi<<interface>>
 }
 ENUM Genre<<énumération>>
 {
-+ {static} {ReadOnly} FEMININ:western.Genre 
-+ {static} {ReadOnly} MASCULIN:western.Genre 
++ {static} {ReadOnly} FEMININ
++ {static} {ReadOnly} MASCULIN
 
 }
 CLASS Boisson
@@ -67,7 +71,7 @@ HorsLaLoi <|... Ripou
 
 Nommable <|... Personnage
 
-Nommable <|... HorsLaLoi
+Nommable <|-- HorsLaLoi
 
 Personnage <|--- Brigand
 
@@ -79,10 +83,6 @@ Personnage <|--- Cowboy
 
 Personnage <|--- Narrateur
 
-Brigand --- String : LOOK_PAR_DEFAUT
-
-Brigand --- String : look
-
 Brigand --- Dame : captives
 
 Brigand --- Cowboy : gardien
@@ -90,8 +90,6 @@ Brigand --- Cowboy : gardien
 Brigand --- Boisson : boissonParDefaut
 
 Ripou --- Brigand : brigand
-
-Substantif --- String : nom
 
 Substantif --- Genre : genre
 
@@ -102,8 +100,6 @@ Dame --- HorsLaLoi : ravisseur
 Dame --- Boisson : boissonParDefaut
 
 Personnage --- Boisson : BOISSON_PAR_DEFAUT
-
-Personnage --- String : nom
 
 Personnage --- Boisson : boisson
 

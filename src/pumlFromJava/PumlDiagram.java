@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Parameter;
 import java.util.*;
 import java.util.spi.ToolProvider;
 
@@ -182,7 +183,7 @@ public class PumlDiagram implements Doclet
 
                     //Dans l'interface TypeKind, il y a une méthode isPrimitive() qui permet de savoir si le type est primitif
                     //Je teste aussi pour savoir si cet élément est une constante dans l'énumération
-                    if (typeKind.isPrimitive()||el.getKind() == ElementKind.ENUM_CONSTANT)
+                    if (typeKind.isPrimitive()||el.getKind() == ElementKind.ENUM_CONSTANT||(subStr(el.asType().toString()).equals("String")&&el.getKind()!=ElementKind.METHOD))
                     {
                         //Modifier est une énumération qui énumère les modificateur d'un élément (ex : private, public, protected, ...)
                         //J'utilise la méthode getModifiers() de l'interface Element qui renvoie une liste des modificateurs de cet élément
@@ -202,17 +203,28 @@ public class PumlDiagram implements Doclet
                             if (mo == Modifier.FINAL)
                                 myWriter.write("{ReadOnly} ");
                         }
+
+                        if(subStr(el.asType().toString()).equals("String"))
+                        {
+                            myWriter.write(el.getSimpleName().toString()+":"+subStr(el.asType().toString()));
+                        }
+                        else
+                        {
+
                         //Puis j'écris le nom de l'élément
                         myWriter.write(el.getSimpleName().toString());
 
-                        //Je récupère le type de l'élément en string
-                        String type = el.asType().toString();
+                        if(el.getKind() != ElementKind.ENUM_CONSTANT) {
+                            //Je récupère le type de l'élément en string
+                            String type = el.asType().toString();
 
-                        //Je regarde si c'est un int, alors j'écris Integer en UML
-                        if (el.asType().getKind() == TypeKind.INT)
-                            type = "Integer";
+                            //Je regarde si c'est un int, alors j'écris Integer en UML
+                            if (el.asType().getKind() == TypeKind.INT)
+                                type = "Integer";
 
-                        myWriter.write(":" + type + " ");
+
+                            myWriter.write(":" + type + " ");
+                        }}
                         myWriter.write("\n");
                     }
 
@@ -223,7 +235,7 @@ public class PumlDiagram implements Doclet
 
                     for(TypeMirror tm:typeElement.getInterfaces())
                     {
-                        //System.out.println(tm.getKind().toString());
+
                         if(e.getKind().isInterface())
                         {
                             if (!interfaces.contains(subStr(tm.toString()) + " <|-- " + e.getSimpleName()))
@@ -243,13 +255,15 @@ public class PumlDiagram implements Doclet
                     {
                         if(!heritageSilYA.toString().equals("java.lang.Object"))
                         {
+
+
                             if (!heritages.contains(subStr(heritageSilYA.toString()) + " <|--- " + subStr(e.getSimpleName().toString())))
                                 heritages.add(subStr(heritageSilYA.toString()) + " <|--- " + subStr(e.getSimpleName().toString()));
                         }
                     }
 
-                    System.out.println(subStr("western.Cowboy"));
-                    System.out.println(heritageSilYA.toString());
+                    //System.out.println(subStr("western.Cowboy"));
+                    //System.out.println(heritageSilYA.toString());
 
                     //----Partie use-----
 
@@ -259,11 +273,14 @@ public class PumlDiagram implements Doclet
                         {
                             if(el.getKind()!=ElementKind.CONSTRUCTOR&&el.getKind()!=ElementKind.ENUM_CONSTANT)
                             {
-                            if(!associations.contains(e.getSimpleName()+" --- "+subStr(el.asType().toString())+" : "+subStr(el.getSimpleName().toString())));
-                                associations.add(e.getSimpleName()+" --- "+subStr(el.asType().toString())+" : "+subStr(el.getSimpleName().toString()));
+                                if(!subStr(el.asType().toString()).equals("String"))
+                                {
+
+                                    if (!associations.contains(e.getSimpleName() + " --- " + subStr(el.asType().toString()) + " : " + subStr(el.getSimpleName().toString())))
+
+                                    associations.add(e.getSimpleName() + " --- " + subStr(el.asType().toString()) + " : " + subStr(el.getSimpleName().toString()));
+                                }
                             }
-
-
                         }
 
 
@@ -274,18 +291,22 @@ public class PumlDiagram implements Doclet
                     //Le constructeur
                     //Si c'est un constructeur et que je ne suis pas dans une énumération
                     /*
-                    if (el.getKind() == ElementKind.CONSTRUCTOR&&e.getKind()!=ElementKind.ENUM)
-                    {
+                    if (el.getKind() == ElementKind.CONSTRUCTOR&&e.getKind()!=ElementKind.ENUM) {
                         //Pour chaque modificateur
-                        for (Modifier mo : el.getModifiers())
-                        {
+                        for (Modifier mo : el.getModifiers()) {
                             if (mo == Modifier.PUBLIC)
                                 myWriter.write("+ ");
                             else if (mo == Modifier.PRIVATE)
                                 myWriter.write("- ");
                         }
                         //Il y a juste que el.toString() écrit le nom entier avec le package
-                        myWriter.write(" <<create>> " + el.toString() +"\n");
+                        myWriter.write(" <<create>> "+subStr(e.getSimpleName().toString()));
+
+                        //TypeElement ede=(TypeElement) e.getEnclosingElement();
+
+                        //parametre
+                        //mais il n'y a pas encore le nom
+                        myWriter.write(el.asType().toString()+"\n");
                     }*/
                     //---------------------------
                 }
@@ -336,11 +357,18 @@ public class PumlDiagram implements Doclet
         else
             retour=nom.substring(position+1,nom.length());
 
+
         if(retour.charAt(retour.length()-1) == '>')
         {
             retour = retour.substring(0, retour.length()-1);
         }
 
+        if(retour.charAt(retour.length()-1)=='>')
+            retour=retour.substring(0,retour.length()-1);
+
+
         return retour;
     }
+
+
 }

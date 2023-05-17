@@ -101,6 +101,7 @@ public class PumlDiagram implements Doclet
         //Jsp pk mais l'option -d donne l'erreur : javadoc: error - invalid flag: -d
         //Donc je choisis moi meme le chemin dans la methode de creation
         toolProvider.run(System.out, System.err, argument);
+
     }
 
     public void creation(Element element)
@@ -222,13 +223,13 @@ public class PumlDiagram implements Doclet
 
                     for(TypeMirror tm:typeElement.getInterfaces())
                     {
-                        /*
-                        if((ElementKind) tm.getKind()==ElementKind.INTERFACE)
+                        //System.out.println(tm.getKind().toString());
+                        if(e.getKind().isInterface())
                         {
                             if (!interfaces.contains(subStr(tm.toString()) + " <|-- " + e.getSimpleName()))
                                 interfaces.add((subStr(tm.toString()) + " <|-- " + e.getSimpleName()));
                         }
-                        else*/
+                        else
                         {
 
                             if (!interfaces.contains(subStr(tm.toString()) + " <|... " + e.getSimpleName()))
@@ -334,6 +335,11 @@ public class PumlDiagram implements Doclet
             retour=nom;
         else
             retour=nom.substring(position+1,nom.length());
+
+        if(retour.charAt(retour.length()-1) == '>')
+        {
+            retour = retour.substring(0, retour.length()-1);
+        }
 
         return retour;
     }

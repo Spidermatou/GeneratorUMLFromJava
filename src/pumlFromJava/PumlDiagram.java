@@ -4,6 +4,11 @@ import com.sun.source.tree.Tree;
 import jdk.javadoc.doclet.Doclet;
 import jdk.javadoc.doclet.DocletEnvironment;
 import jdk.javadoc.doclet.Reporter;
+import pumlFromJava.classes.Attributs;
+import pumlFromJava.classes.Constructeurs;
+import pumlFromJava.liens.Associations;
+import pumlFromJava.liens.Heritages;
+import pumlFromJava.liens.Interfaces;
 
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
@@ -25,7 +30,7 @@ public class PumlDiagram implements Doclet
     private Reporter reporter;
     private Locale locale;
 
-    //Je prévoie un constructeur public et sans arguments
+    //Je prévois un constructeur public et sans arguments
     public PumlDiagram()
     {
         //Vide
@@ -37,21 +42,23 @@ public class PumlDiagram implements Doclet
         //Je met le Reporter et le Locale
         this.reporter=reporter;
         this.locale=locale;
-
     }
 
     @Override
-    public String getName() {
+    public String getName()
+    {
         return getClass().getSimpleName();
     }
 
 
     @Override
-    public SourceVersion getSupportedSourceVersion() {
+    public SourceVersion getSupportedSourceVersion()
+    {
         return SourceVersion.latest();
     }
     @Override
-    public boolean run(DocletEnvironment environment) {
+    public boolean run(DocletEnvironment environment)
+    {
         System.out.println(this.getName());
         System.out.println(environment.getSpecifiedElements());
         System.out.println(environment.getIncludedElements());
@@ -74,6 +81,7 @@ public class PumlDiagram implements Doclet
         System.out.println("modifiers: " + element.getModifiers());
         System.out.println();
 
+        //La méthode qui va créer le diagramme
         creation(element);
     }
     @Override
@@ -81,7 +89,6 @@ public class PumlDiagram implements Doclet
         // This doclet does not support any options.
         return Collections.emptySet();
     }
-
 
     /*
     Reporters
@@ -96,11 +103,11 @@ public class PumlDiagram implements Doclet
         ToolProvider toolProvider = ToolProvider.findFirst("javadoc").get();
         System.out.println(toolProvider.name());
 
-        //La tableau d'arguement
+        //Le tableau d'arguments
         String []argument=new String[] {"-private","-sourcepath", "src", "-doclet",
                 "pumlFromJava.PumlDiagram", "-docletpath", "out/production/p-21-projet-renaud-matteo-gillig-matteo-tp-4", "western"};
         //Jsp pk mais l'option -d donne l'erreur : javadoc: error - invalid flag: -d
-        //Donc je choisis moi meme le chemin dans la methode de creation
+        //Donc je choisis moi-même le chemin dans la méthode de création
         toolProvider.run(System.out, System.err, argument);
 
     }
@@ -141,12 +148,17 @@ public class PumlDiagram implements Doclet
                                 "skinparam style strictuml\n" +
                                 "hide empty members\n\n");
 
+            //Par contre, comme on écrit directement le nom du package, pour l'instant notre Doclet ne marche que si on lui fournit un et un seul package.
             //Nom du package
             myWriter.write("package "+element.getSimpleName().toString()+"\n{\n");
 
-            ArrayList<String> interfaces=new ArrayList<>();
-            ArrayList<String> heritages=new ArrayList<>();
-            ArrayList<String> associations=new ArrayList<>();
+            //Pour récupérer les liens pour les héritages, associations et interfaces
+            Heritages recupHeritage=new Heritages(element);
+            Associations recupAssociations=new Associations(element);
+            Interfaces recupInterfaces=new Interfaces(element);
+            ArrayList<String> heritages=recupHeritage.obtenirLesHeritages();
+            ArrayList<String> associations=recupAssociations.obtenirLesAssociations();
+            ArrayList<String> interfaces=recupInterfaces.obtenirLesImplements();
 
             //Chaque élément présent dans le package
             for(Element e:element.getEnclosedElements())
@@ -154,7 +166,7 @@ public class PumlDiagram implements Doclet
                 //Le type et le nom
                 myWriter.write(e.getKind()+" "+e.getSimpleName());
 
-                //Si c'est une énumeration ou une interface
+                //Si c'est une énumération ou une interface
                 if(e.getKind()== ElementKind.INTERFACE)
                 {
                     //J'ajoute le stéréotype <<interface>>
@@ -170,154 +182,32 @@ public class PumlDiagram implements Doclet
                     myWriter.write("\n{\n");
                 }
 
-                //Pour chaque élements dans cet élement (donc chaque éléments dans la classe/énumération ou interface)
+                //Pour chaque élément dans cet élément (donc chaque élément dans la classe/énumération ou interface)
                 for(Element el:e.getEnclosedElements())
                 {
-                    //TypeMirror est une interface qui : représente un type en Java.
-                    //Les Types inclus les types primitifs, les types déclarer (classe et interface), tableau, variables et le type null.
-                    //Cela inclus aussi les Wildcard arguments, la signature et type de retour des méthodes et les pseudos correspondance aux package, modules et void.
-                    TypeMirror typeMirror = el.asType();
+                    //Je récupère les attributs
+                    Attributs recupAttribut=new Attributs(el);
+                    ArrayList<String> attributs=recupAttribut.obtenirLesAttributs();
 
-                    //TypeKind est une énumération d'un type de TypeMirror.
-                    TypeKind typeKind = typeMirror.getKind();
-
-                    //Dans l'interface TypeKind, il y a une méthode isPrimitive() qui permet de savoir si le type est primitif
-                    //Je teste aussi pour savoir si cet élément est une constante dans l'énumération
-                    if (typeKind.isPrimitive()||el.getKind() == ElementKind.ENUM_CONSTANT||(subStr(el.asType().toString()).equals("String")&&el.getKind()!=ElementKind.METHOD))
-                    {
-                        //Modifier est une énumération qui énumère les modificateur d'un élément (ex : private, public, protected, ...)
-                        //J'utilise la méthode getModifiers() de l'interface Element qui renvoie une liste des modificateurs de cet élément
-                        for (Modifier mo : el.getModifiers())
-                        {
-                            //En fonction du modificateur, j'écris +, - ou #
-                            if (mo == Modifier.PUBLIC)
-                                myWriter.write("+ ");
-                            else if (mo == Modifier.PRIVATE)
-                                myWriter.write("- ");
-                            else if (mo == Modifier.PROTECTED)
-                                myWriter.write("# ");
-
-                            //Je peux aussi savoir si c'est static ou final
-                            if (mo == Modifier.STATIC)
-                                myWriter.write("{static} ");
-                            if (mo == Modifier.FINAL)
-                                myWriter.write("{ReadOnly} ");
-                        }
-
-                        if(subStr(el.asType().toString()).equals("String"))
-                        {
-                            myWriter.write(el.getSimpleName().toString()+":"+subStr(el.asType().toString()));
-                        }
-                        else
-                        {
-
-                        //Puis j'écris le nom de l'élément
-                        myWriter.write(el.getSimpleName().toString());
-
-                        if(el.getKind() != ElementKind.ENUM_CONSTANT) {
-                            //Je récupère le type de l'élément en string
-                            String type = el.asType().toString();
-
-                            //Je regarde si c'est un int, alors j'écris Integer en UML
-                            if (el.asType().getKind() == TypeKind.INT)
-                                type = "Integer";
-
-
-                            myWriter.write(":" + type + " ");
-                        }}
-                        myWriter.write("\n");
-                    }
-
-                    //----Partie Association-----
-
-
-                    TypeElement typeElement=(TypeElement) el.getEnclosingElement();
-
-                    for(TypeMirror tm:typeElement.getInterfaces())
-                    {
-
-                        if(e.getKind().isInterface())
-                        {
-                            if (!interfaces.contains(subStr(tm.toString()) + " <|-- " + e.getSimpleName()))
-                                interfaces.add((subStr(tm.toString()) + " <|-- " + e.getSimpleName()));
-                        }
-                        else
-                        {
-
-                            if (!interfaces.contains(subStr(tm.toString()) + " <|... " + e.getSimpleName()))
-                                interfaces.add((subStr(tm.toString()) + " <|... " + e.getSimpleName()));
-                        }
-                    }
-
-                    TypeMirror heritageSilYA=typeElement.getSuperclass();
-
-                    if(heritageSilYA.toString()!="none"&&e.getKind()!= ElementKind.ENUM)
-                    {
-                        if(!heritageSilYA.toString().equals("java.lang.Object"))
-                        {
-
-
-                            if (!heritages.contains(subStr(heritageSilYA.toString()) + " <|--- " + subStr(e.getSimpleName().toString())))
-                                heritages.add(subStr(heritageSilYA.toString()) + " <|--- " + subStr(e.getSimpleName().toString()));
-                        }
-                    }
-
-                    //System.out.println(subStr("western.Cowboy"));
-                    //System.out.println(heritageSilYA.toString());
-
-                    //----Partie use-----
-
-
-
-                        if (!typeKind.isPrimitive()&&el.getKind()!=ElementKind.METHOD)
-                        {
-                            if(el.getKind()!=ElementKind.CONSTRUCTOR&&el.getKind()!=ElementKind.ENUM_CONSTANT)
-                            {
-                                if(!subStr(el.asType().toString()).equals("String"))
-                                {
-
-                                    if (!associations.contains(e.getSimpleName() + " --- " + subStr(el.asType().toString()) + " : " + subStr(el.getSimpleName().toString())))
-
-                                    associations.add(e.getSimpleName() + " --- " + subStr(el.asType().toString()) + " : " + subStr(el.getSimpleName().toString()));
-                                }
-                            }
-                        }
-
-
-
-
+                    //J'écris
+                    for(String s:attributs)
+                        myWriter.write(s);
 
                     //----Partie suivante----
                     //Le constructeur
-                    //Si c'est un constructeur et que je ne suis pas dans une énumération
-                    /*
-                    if (el.getKind() == ElementKind.CONSTRUCTOR&&e.getKind()!=ElementKind.ENUM) {
-                        //Pour chaque modificateur
-                        for (Modifier mo : el.getModifiers()) {
-                            if (mo == Modifier.PUBLIC)
-                                myWriter.write("+ ");
-                            else if (mo == Modifier.PRIVATE)
-                                myWriter.write("- ");
-                        }
-                        //Il y a juste que el.toString() écrit le nom entier avec le package
-                        myWriter.write(" <<create>> "+subStr(e.getSimpleName().toString()));
-
-                        //TypeElement ede=(TypeElement) e.getEnclosingElement();
-
-                        //parametre
-                        //mais il n'y a pas encore le nom
-                        myWriter.write(el.asType().toString()+"\n");
-                    }*/
-                    //---------------------------
+                    //On fait bien attention, si c'est un constructeur et qu'on n'est pas dans une énumération
+                    if (el.getKind() == ElementKind.CONSTRUCTOR&&e.getKind()!=ElementKind.ENUM)
+                    {
+                        //Alors, on peut récupérer notre constructeur
+                        Constructeurs recupConstructeurs = new Constructeurs(e, el);
+                        myWriter.write(recupConstructeurs.obtenirLeOuLesConstructeurs());
+                    }
                 }
-
                 //Fin de la classe/interface/énumération
                 myWriter.write("\n}\n");
-
             }
 
-
-
+            //Ecriture des liens pour les interfaces, héritages et associations
             for(String s:interfaces)
                 myWriter.write("\n"+s+"\n");
 
@@ -340,6 +230,9 @@ public class PumlDiagram implements Doclet
         }
     }
 
+    //Méthode maison pour enlever le nom des package avant
+    //Car quand on écrit le nom (avec la méthode getSimpleName()), on obtient par exemple java.western.Boisson
+    //Donc ce qu'on va faire, c'est que l'on va juste garder la dernière partie (après le dernier point)
     public static String subStr(String nom)
     {
         String retour="";
@@ -357,18 +250,11 @@ public class PumlDiagram implements Doclet
         else
             retour=nom.substring(position+1,nom.length());
 
-
-        if(retour.charAt(retour.length()-1) == '>')
-        {
-            retour = retour.substring(0, retour.length()-1);
-        }
-
+        //Dans certains cas, les noms sont entre < > (dans des listes, init, etc ...), et comme on garde tout après le dernier point, ce caractère peut rester
+        //On va alors simplement l'enlever s'il y a ce caractère
         if(retour.charAt(retour.length()-1)=='>')
             retour=retour.substring(0,retour.length()-1);
 
-
         return retour;
     }
-
-
 }

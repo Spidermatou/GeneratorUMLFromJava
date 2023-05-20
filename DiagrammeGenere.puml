@@ -6,90 +6,99 @@ hide empty members
 
 package western
 {
-ENUM Genre<<énumération>>
-{
-+ {static} {ReadOnly} FEMININ
-+ {static} {ReadOnly} MASCULIN
-
-}
-CLASS Histoire4
-{
-
-}
-CLASS Personnage
-{
-- nom:String
-
-}
-CLASS Boisson
-{
-
-}
 CLASS Brigand
 {
 # {static} LOOK_PAR_DEFAUT:String
 - look:String
 - recompense:Integer 
 - estLibre:boolean 
++  <<create>> Brigand(java.lang.String)
++  <<create>> Brigand(java.lang.String,western.Boisson)
++  <<create>> Brigand(java.lang.String,western.Boisson,java.lang.String)
 
 }
-CLASS Narrateur
+CLASS Ripou
 {
-
-}
-INTERFACE HorsLaLoi<<interface>>
-{
-
-}
-CLASS Dame
-{
-- estLibre:boolean 
++  <<create>> Ripou(java.lang.String)
++  <<create>> Ripou(java.lang.String,western.Boisson)
++  <<create>> Ripou(java.lang.String,western.Boisson,java.lang.String)
 
 }
 CLASS Substantif
 {
 - nom:String
++  <<create>> Substantif(java.lang.String,western.Genre)
 
 }
-CLASS Ripou
+CLASS Histoire4
 {
++  <<create>> Histoire4()
 
 }
 INTERFACE Nommable<<interface>>
 {
 
 }
+CLASS Dame
+{
+- estLibre:boolean 
++  <<create>> Dame(java.lang.String)
++  <<create>> Dame(java.lang.String,western.Boisson)
+
+}
+CLASS Personnage
+{
+- nom:String
++  <<create>> Personnage(java.lang.String)
++  <<create>> Personnage(java.lang.String,western.Boisson)
+
+}
 CLASS Cowboy
 {
 - gains:Integer 
++  <<create>> Cowboy(java.lang.String)
++  <<create>> Cowboy(java.lang.String,western.Boisson)
+
+}
+INTERFACE HorsLaLoi<<interface>>
+{
+
+}
+ENUM Genre<<énumération>>
+{
++ {static} {ReadOnly} FEMININ
++ {static} {ReadOnly} MASCULIN
+
+}
+CLASS Boisson
+{
++  <<create>> Boisson(java.lang.String,western.Genre)
+
+}
+CLASS Narrateur
+{
++  <<create>> Narrateur()
++  <<create>> Narrateur(java.lang.String)
 
 }
 
-Nommable <|... Personnage
-
 HorsLaLoi <|... Brigand
-
-Nommable <|-- HorsLaLoi
 
 HorsLaLoi <|... Ripou
 
+Nommable <|... Personnage
+
+Nommable <|-- HorsLaLoi
+
 Personnage <|--- Brigand
-
-Personnage <|--- Narrateur
-
-Personnage <|--- Dame
 
 Cowboy <|--- Ripou
 
+Personnage <|--- Dame
+
 Personnage <|--- Cowboy
 
-Personnage --- Boisson : BOISSON_PAR_DEFAUT
-
-Personnage --- Boisson : boisson
-
-Boisson --- Substantif : substantif
-
-Boisson --- Boisson : EAU
+Personnage <|--- Narrateur
 
 Brigand --- Dame : captives
 
@@ -97,18 +106,26 @@ Brigand --- Cowboy : gardien
 
 Brigand --- Boisson : boissonParDefaut
 
+Ripou --- Brigand : brigand
+
+Substantif --- Genre : genre
+
 Dame --- Cowboy : sauveur
 
 Dame --- HorsLaLoi : ravisseur
 
 Dame --- Boisson : boissonParDefaut
 
-Substantif --- Genre : genre
+Personnage --- Boisson : BOISSON_PAR_DEFAUT
 
-Ripou --- Brigand : brigand
+Personnage --- Boisson : boisson
 
 Cowboy --- HorsLaLoi : captures
 
 Cowboy --- Boisson : boissonParDefaut
+
+Boisson --- Substantif : substantif
+
+Boisson --- Boisson : EAU
 }
 @enduml

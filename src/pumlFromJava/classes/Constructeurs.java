@@ -6,8 +6,8 @@ import javax.lang.model.element.*;
 
 public class Constructeurs
 {
-    private Element grandElement;
-    private Element petitElement;
+    private final Element grandElement;
+    private final Element petitElement;
 
     public Constructeurs(Element grandElement,Element petitElement)
     {

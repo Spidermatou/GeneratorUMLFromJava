@@ -3,14 +3,13 @@ package pumlFromJava.classes;
 import pumlFromJava.PumlDiagram;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import java.util.ArrayList;
 
 public class Attributs
 {
-    private Element element;
+    private final Element element;
 
     public Attributs(Element element)
     {
@@ -20,7 +19,7 @@ public class Attributs
 
     public ArrayList<String> obtenirLesAttributs()
     {
-        ArrayList<String>attributs=new ArrayList<String>();
+        ArrayList<String>attributs=new ArrayList<>();
 
         //TypeMirror est une interface qui : représente un type en Java.
         //Cela inclut les types primitifs, les types déclarés (classe et interface), tableaux, variables et le type null.

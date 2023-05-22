@@ -5,7 +5,7 @@ import javax.lang.model.element.Modifier;
 
 public class Modificateurs
 {
-    private Element element;
+    private final Element element;
 
     public Modificateurs(Element element)
     {

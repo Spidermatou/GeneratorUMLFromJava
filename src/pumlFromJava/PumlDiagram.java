@@ -152,7 +152,7 @@ public class PumlDiagram implements Doclet
             ArrayList<String> associations=recupAssociations.obtenirLesAssociations();
             ArrayList<String> interfaces=recupInterfaces.obtenirLesImplements();
 
-            //Methode Ecrire pour écrire le code du diagramme dans le ficheir uml
+            //Methode Ecrire pour écrire le code du diagramme dans le fichier uml
             Ecrire(element, myWriter);
 
             //Ecriture des liens pour les interfaces, héritages et associations

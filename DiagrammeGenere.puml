@@ -3,7 +3,6 @@ skinparam classAttributeIconSize 0
 skinparam classFontStyle Bold
 skinparam style strictuml
 hide empty members
-
 package western
 {
 CLASS Brigand
@@ -12,27 +11,65 @@ CLASS Brigand
 - look:String
 - recompense:Integer 
 - estLibre:boolean 
-+  <<create>> Brigand(java.lang.String)
-+  <<create>> Brigand(java.lang.String,western.Boisson)
-+  <<create>> Brigand(java.lang.String,western.Boisson,java.lang.String)
++  <<create>> Brigand (nom:String)
++  <<create>> Brigand (nom:String,boisson:Boisson)
++  <<create>> Brigand (nom:String,boisson:Boisson,look:String)
++ getLook():String
++ getRecompense():int
++ estLibre():boolean
++ kidnapper(dame:Dame)
++ seFaireCapturer(cowBoy:Cowboy)
++ seFaireTirerDessus(cowBoy:Cowboy)
++ getPseudo():String
++ getCaptives():java.util.List<western.Dame>
++ sePresenter()
++ {static} getBoissonParDefaut():Boisson
++ {static} setBoissonParDefaut(boisson:Boisson)
 
 }
 CLASS Ripou
 {
-+  <<create>> Ripou(java.lang.String)
-+  <<create>> Ripou(java.lang.String,western.Boisson)
-+  <<create>> Ripou(java.lang.String,western.Boisson,java.lang.String)
++  <<create>> Ripou (nom:String)
++  <<create>> Ripou (nom:String,boisson:Boisson)
++  <<create>> Ripou (nom:String,boisson:Boisson,look:String)
++ getLook():String
++ estLibre():boolean
++ getRecompense():int
++ kidnapper(dame:Dame)
++ getCaptives():java.util.List<western.Dame>
++ seFaireCapturer(cowBoy:Cowboy)
++ seFaireTirerDessus(cowBoy:Cowboy)
++ getPseudo():String
++ sePresenter()
++ liberer(dame:Dame)
 
 }
 CLASS Substantif
 {
 - nom:String
-+  <<create>> Substantif(java.lang.String,western.Genre)
++  <<create>> Substantif (nom:String,genre:Genre)
++ getNom():String
++ getGenre():Genre
++ toString():String
++ {static} isVowel(c:char):boolean
++ {static} startsWithVowel(s:String):boolean
++ getArticleIndefini():String
++ avecArticleIndefini():String
++ {static} getArticleDefini(genre:Genre):String
++ getArticleDefini():String
++ avecArticleDefini():String
++ {static} faireElision(article:String):String
++ elision():boolean
++ getArticlePartitif():String
++ avecArticlePartitif():String
++ avecElision(article:String):String
++ avecPreposition(preposition:String):String
 
 }
 CLASS Histoire4
 {
-+  <<create>> Histoire4()
++  <<create>> Histoire4 ()
++ {static} main(args:String[])
 
 }
 INTERFACE Nommable<<interface>>
@@ -42,22 +79,46 @@ INTERFACE Nommable<<interface>>
 CLASS Dame
 {
 - estLibre:boolean 
-+  <<create>> Dame(java.lang.String)
-+  <<create>> Dame(java.lang.String,western.Boisson)
++  <<create>> Dame (nom:String)
++  <<create>> Dame (nom:String,boisson:Boisson)
++ getPseudo():String
++ seFaireKidnapper(horsLaLoi:HorsLaLoi)
++ seFaireLiberer(cowBoy:Cowboy)
++ estLibre():boolean
++ sePresenter()
++ {static} getBoissonParDefaut():Boisson
++ {static} setBoissonParDefaut(boisson:Boisson)
++ getRavisseur():HorsLaLoi
 
 }
 CLASS Personnage
 {
 - nom:String
-+  <<create>> Personnage(java.lang.String)
-+  <<create>> Personnage(java.lang.String,western.Boisson)
++  <<create>> Personnage (nom:String)
++  <<create>> Personnage (nom:String,boisson:Boisson)
++ dire(texte:String)
++ sePresenter()
++ boire(boisson:Boisson)
++ boire()
++ getNom():String
++ getBoisson():Boisson
++ {static} getPseudos(personnages:Nommable):String
++ {static} getBoissonParDefaut():Boisson
 
 }
 CLASS Cowboy
 {
 - gains:Integer 
-+  <<create>> Cowboy(java.lang.String)
-+  <<create>> Cowboy(java.lang.String,western.Boisson)
++  <<create>> Cowboy (nom:String)
++  <<create>> Cowboy (nom:String,boisson:Boisson)
++ getPseudo():String
++ liberer(dame:Dame)
++ liberer(captives:Dame)
++ capturer(horsLaLoi:HorsLaLoi)
++ tirerSur(brigand:HorsLaLoi)
++ sePresenter()
++ {static} getBoissonParDefaut():Boisson
++ {static} setBoissonParDefaut(boisson:Boisson)
 
 }
 INTERFACE HorsLaLoi<<interface>>
@@ -72,13 +133,23 @@ ENUM Genre<<énumération>>
 }
 CLASS Boisson
 {
-+  <<create>> Boisson(java.lang.String,western.Genre)
++  <<create>> Boisson (nom:String,genre:Genre)
++ getNom():String
++ getGenre():Genre
++ getNomAvecArticleIndefini():String
++ getNomAvecArticlePartitif():String
++ getNomAvecArticleDefini():String
++ getNomAvecPreposition(preposition:String):String
 
 }
 CLASS Narrateur
 {
-+  <<create>> Narrateur()
-+  <<create>> Narrateur(java.lang.String)
++  <<create>> Narrateur ()
++  <<create>> Narrateur (nom:String)
++ dire(texte:String)
++ boire(boisson:Boisson)
++ boire()
++ getPseudo():String
 
 }
 

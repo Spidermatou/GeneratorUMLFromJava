@@ -6,6 +6,7 @@ import jdk.javadoc.doclet.DocletEnvironment;
 import jdk.javadoc.doclet.Reporter;
 import pumlFromJava.classes.Attributs;
 import pumlFromJava.classes.Constructeurs;
+import pumlFromJava.classes.Methodes;
 import pumlFromJava.liens.Associations;
 import pumlFromJava.liens.Heritages;
 import pumlFromJava.liens.Interfaces;
@@ -211,13 +212,10 @@ public class PumlDiagram implements Doclet
         try
         {
             myWriter.write("@startuml\n");
-            myWriter.write("""
-                    skinparam classAttributeIconSize 0
-                    skinparam classFontStyle Bold
-                    skinparam style strictuml
-                    hide empty members
-
-                    """);
+            myWriter.write("skinparam classAttributeIconSize 0\n"+
+                    "skinparam classFontStyle Bold\n"+
+                    "skinparam style strictuml\n"+
+                    "hide empty members\n");
 
             //Par contre, comme on écrit directement le nom du package, pour l'instant notre Doclet ne marche que si on lui fournit un et un seul package.
             //Nom du package
@@ -226,23 +224,35 @@ public class PumlDiagram implements Doclet
 
 
             //Chaque élément présent dans le package
-            for(Element e:element.getEnclosedElements()) {
+            for(Element e:element.getEnclosedElements())
+            {
                 //Le type et le nom
                 myWriter.write(e.getKind() + " " + e.getSimpleName());
 
                 //Si c'est une énumération ou une interface
-                if (e.getKind() == ElementKind.INTERFACE) {
+                if (e.getKind() == ElementKind.INTERFACE)
+                {
                     //J'ajoute le stéréotype <<interface>>
                     myWriter.write("<<interface>>\n{\n");
-                } else if (e.getKind() == ElementKind.ENUM) {
+                } else if (e.getKind() == ElementKind.ENUM)
+                {
                     //Ou <<énumération>>
                     myWriter.write("<<énumération>>\n{\n");
                 } else {
                     myWriter.write("\n{\n");
                 }
 
+                String txt="";
+
+                if(e.getKind()==ElementKind.CLASS) {
+                    Methodes recupMethode = new Methodes(e);
+                    txt = recupMethode.obtenirLesMethodesDeLaClasse();
+                }
+
+
                 //Pour chaque élément dans cet élément (donc chaque élément dans la classe/énumération ou interface)
-                for (Element el : e.getEnclosedElements()) {
+                for (Element el : e.getEnclosedElements())
+                {
                     //Je récupère les attributs
                     Attributs recupAttribut = new Attributs(el);
                     ArrayList<String> attributs = recupAttribut.obtenirLesAttributs();
@@ -254,12 +264,17 @@ public class PumlDiagram implements Doclet
                     //----Partie suivante----
                     //Le constructeur
                     //On fait bien attention, si c'est un constructeur et qu'on n'est pas dans une énumération
-                    if (el.getKind() == ElementKind.CONSTRUCTOR && e.getKind() != ElementKind.ENUM) {
+                    if (el.getKind() == ElementKind.CONSTRUCTOR && e.getKind() != ElementKind.ENUM)
+                    {
                         //Alors, on peut récupérer notre constructeur
                         Constructeurs recupConstructeurs = new Constructeurs(e, el);
                         myWriter.write(recupConstructeurs.obtenirLeOuLesConstructeurs());
                     }
+
+
                 }
+                myWriter.write(txt);
+
                 myWriter.write("\n}\n");
             }
         }

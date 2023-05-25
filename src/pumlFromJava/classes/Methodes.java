@@ -92,14 +92,7 @@ public class Methodes
 
     public static String parameterList(String texte)
     {
-        String retour = "";
-        for(int i = 0; i < texte.length(); i++)
-        {
-            retour += texte.charAt(i);
-        }
-
-        retour += "[*]";
-        return retour;
+        return texte += "[*]";
     }
 }
 

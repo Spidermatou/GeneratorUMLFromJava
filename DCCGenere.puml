@@ -1,0 +1,211 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam classFontStyle Bold
+skinparam style strictuml
+hide empty members
+package western
+{
+CLASS Brigand
+{
+# {static} LOOK_PAR_DEFAUT:String
+- look:String
+- recompense:Integer 
+- estLibre:boolean 
++  <<create>> Brigand (nom:String)
++  <<create>> Brigand (nom:String,boisson:Boisson)
++  <<create>> Brigand (nom:String,boisson:Boisson,look:String)
++ getLook():String
++ getRecompense():int
++ estLibre():boolean
++ kidnapper(dame:Dame)
++ seFaireCapturer(cowBoy:Cowboy)
++ seFaireTirerDessus(cowBoy:Cowboy)
++ getPseudo():String
++ getCaptives():Dame[*]
++ sePresenter()
++ {static} getBoissonParDefaut():Boisson
++ {static} setBoissonParDefaut(boisson:Boisson)
+
+}
+CLASS Ripou
+{
++  <<create>> Ripou (nom:String)
++  <<create>> Ripou (nom:String,boisson:Boisson)
++  <<create>> Ripou (nom:String,boisson:Boisson,look:String)
++ getLook():String
++ estLibre():boolean
++ getRecompense():int
++ kidnapper(dame:Dame)
++ getCaptives():Dame[*]
++ seFaireCapturer(cowBoy:Cowboy)
++ seFaireTirerDessus(cowBoy:Cowboy)
++ getPseudo():String
++ sePresenter()
++ liberer(dame:Dame)
+
+}
+CLASS Substantif
+{
+- nom:String
++  <<create>> Substantif (nom:String,genre:Genre)
++ getNom():String
++ getGenre():Genre
++ toString():String
++ {static} isVowel(c:char):boolean
++ {static} startsWithVowel(s:String):boolean
++ getArticleIndefini():String
++ avecArticleIndefini():String
++ {static} getArticleDefini(genre:Genre):String
++ getArticleDefini():String
++ avecArticleDefini():String
++ {static} faireElision(article:String):String
++ elision():boolean
++ getArticlePartitif():String
++ avecArticlePartitif():String
++ avecElision(article:String):String
++ avecPreposition(preposition:String):String
+
+}
+CLASS Histoire4
+{
++  <<create>> Histoire4 ()
++ {static} main(args:String[])
+
+}
+INTERFACE Nommable<<interface>>
+{
++ getNom():String
++ getPseudo():String
+
+}
+CLASS Dame
+{
+- estLibre:boolean 
++  <<create>> Dame (nom:String)
++  <<create>> Dame (nom:String,boisson:Boisson)
++ getPseudo():String
++ seFaireKidnapper(horsLaLoi:HorsLaLoi)
++ seFaireLiberer(cowBoy:Cowboy)
++ estLibre():boolean
++ sePresenter()
++ {static} getBoissonParDefaut():Boisson
++ {static} setBoissonParDefaut(boisson:Boisson)
++ getRavisseur():HorsLaLoi
+
+}
+CLASS Personnage
+{
+- nom:String
++  <<create>> Personnage (nom:String)
++  <<create>> Personnage (nom:String,boisson:Boisson)
++ dire(texte:String)
++ sePresenter()
++ boire(boisson:Boisson)
++ boire()
++ getNom():String
++ getBoisson():Boisson
++ {static} getPseudos(personnages:Nommable):String
++ {static} getBoissonParDefaut():Boisson
+
+}
+CLASS Cowboy
+{
+- gains:Integer 
++  <<create>> Cowboy (nom:String)
++  <<create>> Cowboy (nom:String,boisson:Boisson)
++ getPseudo():String
++ liberer(dame:Dame)
++ liberer(captives:Dame)
++ capturer(horsLaLoi:HorsLaLoi)
++ tirerSur(brigand:HorsLaLoi)
++ sePresenter()
++ {static} getBoissonParDefaut():Boisson
++ {static} setBoissonParDefaut(boisson:Boisson)
+
+}
+INTERFACE HorsLaLoi<<interface>>
+{
++ estLibre():boolean
++ getRecompense():int
++ kidnapper(dame:Dame)
++ seFaireCapturer(cowBoy:Cowboy)
++ seFaireTirerDessus(cowBoy:Cowboy)
++ getLook():String
++ getCaptives():Dame[*]
+
+}
+ENUM Genre<<énumération>>
+{
++ {static} {ReadOnly} FEMININ
++ {static} {ReadOnly} MASCULIN
+
+}
+CLASS Boisson
+{
++  <<create>> Boisson (nom:String,genre:Genre)
++ getNom():String
++ getGenre():Genre
++ getNomAvecArticleIndefini():String
++ getNomAvecArticlePartitif():String
++ getNomAvecArticleDefini():String
++ getNomAvecPreposition(preposition:String):String
+
+}
+CLASS Narrateur
+{
++  <<create>> Narrateur ()
++  <<create>> Narrateur (nom:String)
++ dire(texte:String)
++ boire(boisson:Boisson)
++ boire()
++ getPseudo():String
+
+}
+
+HorsLaLoi <|... Brigand
+
+HorsLaLoi <|... Ripou
+
+Nommable <|... Personnage
+
+Nommable <|-- HorsLaLoi
+
+Personnage <|--- Brigand
+
+Cowboy <|--- Ripou
+
+Personnage <|--- Dame
+
+Personnage <|--- Cowboy
+
+Personnage <|--- Narrateur
+
+Brigand --- Dame : captives
+
+Brigand --- Cowboy : gardien
+
+Brigand --- Boisson : boissonParDefaut
+
+Ripou --- Brigand : brigand
+
+Substantif --- Genre : genre
+
+Dame --- Cowboy : sauveur
+
+Dame --- HorsLaLoi : ravisseur
+
+Dame --- Boisson : boissonParDefaut
+
+Personnage --- Boisson : BOISSON_PAR_DEFAUT
+
+Personnage --- Boisson : boisson
+
+Cowboy --- HorsLaLoi : captures
+
+Cowboy --- Boisson : boissonParDefaut
+
+Boisson --- Substantif : substantif
+
+Boisson --- Boisson : EAU
+}
+@enduml

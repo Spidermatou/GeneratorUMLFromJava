@@ -10,6 +10,8 @@ import pumlFromJava.classes.Methodes;
 import pumlFromJava.liens.Associations;
 import pumlFromJava.liens.Heritages;
 import pumlFromJava.liens.Interfaces;
+import pumlFromJava.typeDiagramme.DCA;
+import pumlFromJava.typeDiagramme.DCC;
 
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
@@ -105,77 +107,98 @@ public class PumlDiagram implements Doclet
         //Le tableau d'arguments
         String []argument=new String[] {"-private","-sourcepath", "src", "-doclet",
                 "pumlFromJava.PumlDiagram", "-docletpath", "out/production/p-21-projet-renaud-matteo-gillig-matteo-tp-4", "western"};
+        String []argument2=new String[] {"-private","-sourcepath", "src", "-doclet",
+                "pumlFromJava.PumlDiagram", "-docletpath", "out/production/p-21-projet-renaud-matteo-gillig-matteo-tp-4", "western","-dca"};
+        voirSiVeutDCA(argument2);
         //Jsp pk mais l'option -d donne l'erreur : javadoc: error - invalid flag: -d
         //Donc je choisis moi-même le chemin dans la méthode de création
         toolProvider.run(System.out, System.err, argument);
 
     }
 
+    private static boolean veutDCC=true;
+    private static boolean veutDCA=false;
+
     public void creation(Element element)
     {
-        //Je choisis moi-même le chemin vers le fichier
-        String cheminVers="DiagrammeGenere.puml";
-
-        //Créer ficher
-        try
+        if(veutDCC)
         {
-            File fichier = new File(cheminVers);
-            if (fichier.createNewFile())
+            //Je choisis moi-même le chemin vers le fichier
+            String cheminVersDCC = "DCCGenere.puml";
+
+            //Créer ficher
+            try
             {
-                System.out.println("Fichier créer : " + fichier.getName());
+                File fichier = new File(cheminVersDCC);
+                if (fichier.createNewFile())
+                {
+                    System.out.println("Fichier créer : " + fichier.getName());
+                } else
+                {
+                    System.out.println("Le fichier existe dèjà.");
+                }
             }
-            else
+            catch (IOException e) {
+                System.out.println("Erreur de création.");
+                e.printStackTrace();
+            }
+            //Ecriture
+            try
             {
-                System.out.println("Le fichier existe dèjà.");
+                FileWriter myWriter = new FileWriter(cheminVersDCC);
+
+                //Methode Ecrire pour écrire le code du diagramme dans le fichier uml
+                DCC dcc = new DCC(element, myWriter);
+                dcc.creerDCC();
+
+                myWriter.close();
+
+                System.out.println("Fin de l'écriture.");
+            }
+            catch (IOException e) {
+                System.out.println("Erreur d'écriture.");
+                e.printStackTrace();
             }
         }
-        catch (IOException e)
+        if(veutDCA)
         {
-            System.out.println("Erreur de création.");
-            e.printStackTrace();
-        }
+            //Je choisis moi-même le chemin vers le fichier
+            String cheminVersDCA = "DCAGenere.puml";
 
-        //Ecriture
-        try
-        {
-            FileWriter myWriter = new FileWriter(cheminVers);
+            //Créer ficher
+            try
+            {
+                File fichier = new File(cheminVersDCA);
+                if (fichier.createNewFile())
+                {
+                    System.out.println("Fichier créer : " + fichier.getName());
+                } else
+                {
+                    System.out.println("Le fichier existe dèjà.");
+                }
+            }
+            catch (IOException e) {
+                System.out.println("Erreur de création.");
+                e.printStackTrace();
+            }
 
-            //L'en-tête du fichier
+            //Ecriture
+            try
+            {
+                FileWriter myWriter = new FileWriter(cheminVersDCA);
 
-            //Par contre, comme on écrit directement le nom du package, pour l'instant notre Doclet ne marche que si on lui fournit un et un seul package.
-            //Nom du package
+                //Methode Ecrire pour écrire le code du diagramme dans le fichier uml
+                DCA dca = new DCA(element, myWriter);
+                dca.creerDCA();
 
-            //Pour récupérer les liens pour les héritages, associations et interfaces
-            Heritages recupHeritage=new Heritages(element);
-            Associations recupAssociations=new Associations(element);
-            Interfaces recupInterfaces=new Interfaces(element);
-            ArrayList<String> heritages=recupHeritage.obtenirLesHeritages();
-            ArrayList<String> associations=recupAssociations.obtenirLesAssociations();
-            ArrayList<String> interfaces=recupInterfaces.obtenirLesImplements();
+                myWriter.close();
 
-            //Methode Ecrire pour écrire le code du diagramme dans le fichier uml
-            Ecrire(element, myWriter);
-
-            //Ecriture des liens pour les interfaces, héritages et associations
-            for(String s:interfaces)
-                myWriter.write("\n"+s+"\n");
-
-            for(String s:heritages)
-                myWriter.write("\n"+s+"\n");
-
-            for(String s:associations)
-                myWriter.write("\n"+s+"\n");
-
-            //Fin du fichier
-            myWriter.write("}\n@enduml");
-            myWriter.close();
-
-            System.out.println("Fin de l'écriture.");
-        }
-        catch (IOException e)
-        {
-            System.out.println("Erreur d'écriture.");
-            e.printStackTrace();
+                System.out.println("Fin de l'écriture.");
+            }
+            catch (IOException e) {
+                System.out.println("Erreur d'écriture.");
+                e.printStackTrace();
+            }
         }
     }
 
@@ -207,81 +230,16 @@ public class PumlDiagram implements Doclet
         return retour;
     }
 
-    public void Ecrire(Element element, FileWriter myWriter)
+    private static void voirSiVeutDCA(String argument[])
     {
-        try
+        for(int i=0;i<argument.length;i++)
         {
-            myWriter.write("@startuml\n");
-            myWriter.write("skinparam classAttributeIconSize 0\n"+
-                    "skinparam classFontStyle Bold\n"+
-                    "skinparam style strictuml\n"+
-                    "hide empty members\n");
-
-            //Par contre, comme on écrit directement le nom du package, pour l'instant notre Doclet ne marche que si on lui fournit un et un seul package.
-            //Nom du package
-            myWriter.write("package "+element.getSimpleName().toString()+"\n{\n");
-
-
-
-            //Chaque élément présent dans le package
-            for(Element e:element.getEnclosedElements())
+            if(argument[i].toLowerCase().equals("-dca"))
             {
-                //Le type et le nom
-                myWriter.write(e.getKind() + " " + e.getSimpleName());
-
-                //Si c'est une énumération ou une interface
-                if (e.getKind() == ElementKind.INTERFACE)
-                {
-                    //J'ajoute le stéréotype <<interface>>
-                    myWriter.write("<<interface>>\n{\n");
-                } else if (e.getKind() == ElementKind.ENUM)
-                {
-                    //Ou <<énumération>>
-                    myWriter.write("<<énumération>>\n{\n");
-                } else {
-                    myWriter.write("\n{\n");
-                }
-
-                String txt="";
-
-                if(e.getKind()==ElementKind.CLASS) {
-                    Methodes recupMethode = new Methodes(e);
-                    txt = recupMethode.obtenirLesMethodesDeLaClasse();
-                }
-
-
-                //Pour chaque élément dans cet élément (donc chaque élément dans la classe/énumération ou interface)
-                for (Element el : e.getEnclosedElements())
-                {
-                    //Je récupère les attributs
-                    Attributs recupAttribut = new Attributs(el);
-                    ArrayList<String> attributs = recupAttribut.obtenirLesAttributs();
-
-                    //J'écris
-                    for (String s : attributs)
-                        myWriter.write(s);
-
-                    //----Partie suivante----
-                    //Le constructeur
-                    //On fait bien attention, si c'est un constructeur et qu'on n'est pas dans une énumération
-                    if (el.getKind() == ElementKind.CONSTRUCTOR && e.getKind() != ElementKind.ENUM)
-                    {
-                        //Alors, on peut récupérer notre constructeur
-                        Constructeurs recupConstructeurs = new Constructeurs(e, el);
-                        myWriter.write(recupConstructeurs.obtenirLeOuLesConstructeurs());
-                    }
-
-
-                }
-                myWriter.write(txt);
-
-                myWriter.write("\n}\n");
+                veutDCA=true;
+                return;
             }
         }
-        catch (IOException e)
-        {
-            System.out.println("Erreur d'écriture.");
-            e.printStackTrace();
-        }
+        veutDCA=false;
     }
 }

@@ -61,7 +61,7 @@ public class Methodes
                      if (((ExecutableElement) methode).getReturnType().toString().charAt(((ExecutableElement) methode).getReturnType().toString().length()-1)=='>')
                      {
                          //Il faut s'occuper de cette partie car c'est les listes
-                         texte += "):" + ((ExecutableElement) methode).getReturnType().toString() + "\n";
+                         texte += "):" + parameterList( PumlDiagram.subStr( ((ExecutableElement) methode).getReturnType().toString() )) + "\n";
                      }
                      else
                      {
@@ -88,6 +88,18 @@ public class Methodes
         }
 
         return res;
+    }
+
+    public static String parameterList(String texte)
+    {
+        String retour = "";
+        for(int i = 0; i < texte.length(); i++)
+        {
+            retour += texte.charAt(i);
+        }
+
+        retour += "[*]";
+        return retour;
     }
 }
 

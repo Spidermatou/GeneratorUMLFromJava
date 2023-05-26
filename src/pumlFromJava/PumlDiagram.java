@@ -35,6 +35,8 @@ public class PumlDiagram implements Doclet
     public PumlDiagram()
     {
         //Vide
+        veutDCC=true;
+        veutDCA=false;
     }
 
     @Override
@@ -111,15 +113,18 @@ public class PumlDiagram implements Doclet
                 "pumlFromJava.PumlDiagram", "-docletpath", "out/production/p-21-projet-renaud-matteo-gillig-matteo-tp-4", "western"};
         String []argument2=new String[] {"-private","-sourcepath", "src", "-doclet",
                 "pumlFromJava.PumlDiagram", "-docletpath", "out/production/p-21-projet-renaud-matteo-gillig-matteo-tp-4", "western","--dca"};
-        voirSiVeutDCA(args);
+
+
+        //veutDCA=voirSiVeutDCA(args);
+
         //Jsp pk mais l'option -d donne l'erreur : javadoc: error - invalid flag: -d
         //Donc je choisis moi-même le chemin dans la méthode de création
         toolProvider.run(System.out, System.err, args);
 
     }
 
-    private static boolean veutDCC=true;
-    private static boolean veutDCA=false;
+    private static boolean veutDCC;
+    private static boolean veutDCA;
 
     public void creation(Element element)
     {
@@ -162,6 +167,7 @@ public class PumlDiagram implements Doclet
                 e.printStackTrace();
             }
         }
+
         if(veutDCA)
         {
             //Je choisis moi-même le chemin vers le fichier
@@ -232,19 +238,18 @@ public class PumlDiagram implements Doclet
         return retour;
     }
 
-    private static void voirSiVeutDCA(String[] argument)
+    public static boolean voirSiVeutDCA(List<String> argument)
     {
-        for(int i=0;i<argument.length;i++)
+        for(int i=0;i<argument.size();i++)
         {
-            System.out.println(argument[i]);
+            System.out.println(argument.get(i));
 
-            if(argument[i].toLowerCase().contains("dca"))
+            if(argument.get(i).toLowerCase().contains("--dca"))
             {
-                veutDCA=true;
-                return;
+                return true;
             }
         }
-        veutDCA=false;
+        return false;
     }
 
     //---Pour les options---
@@ -285,6 +290,7 @@ public class PumlDiagram implements Doclet
                     @Override
                     public boolean process(String opt, List<String> arguments)
                     {
+                        veutDCA=true;
                         return true;
                     }
                 }

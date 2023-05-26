@@ -30,11 +30,15 @@ public class Modificateurs
             else if (mo == Modifier.PROTECTED)
                 modificateurs+="# ";
 
-            //Je peux aussi savoir si c'est static ou final
+            //Je peux aussi savoir si c'est static, final ou abstract (ou default)
             if (mo == Modifier.STATIC)
                 modificateurs+="{static} ";
             if (mo == Modifier.FINAL)
                 modificateurs+="{ReadOnly} ";
+            if(mo == Modifier.ABSTRACT)
+                modificateurs+="{abstract}";
+            if(mo==Modifier.DEFAULT)
+                modificateurs+="{default}";
         }
         return modificateurs;
     }

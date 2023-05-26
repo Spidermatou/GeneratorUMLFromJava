@@ -23,10 +23,12 @@ public class DCC
     Element element;
     FileWriter myWriter;
 
+    //La méthode qui créer le DCC
     public void creerDCC()
     {
         try
         {
+            //L'en-tête du fichier
             myWriter.write("@startuml\n");
             myWriter.write("skinparam classAttributeIconSize 0\n"+
                     "skinparam classFontStyle Bold\n"+
@@ -36,11 +38,6 @@ public class DCC
             //Par contre, comme on écrit directement le nom du package, pour l'instant notre Doclet ne marche que si on lui fournit un et un seul package.
             //Nom du package
             myWriter.write("package "+element.getSimpleName().toString()+"\n{\n");
-
-            //L'en-tête du fichier
-
-            //Par contre, comme on écrit directement le nom du package, pour l'instant notre Doclet ne marche que si on lui fournit un et un seul package.
-            //Nom du package
 
             //Pour récupérer les liens pour les héritages, associations et interfaces
             Heritages recupHeritage = new Heritages(element);
@@ -79,12 +76,12 @@ public class DCC
                     Attributs recupAttribut = new Attributs(el);
                     ArrayList<String> attributs = recupAttribut.obtenirLesAttributs();
 
-                    //J'écris
+                    //J'écris les attributs
                     for (String s : attributs)
                         myWriter.write(s);
 
                     //----Partie suivante----
-                    //Le constructeur
+                    //Le constructeur (cette partie n'est pas présente dans le DCA)
                     //On fait bien attention, si c'est un constructeur et qu'on n'est pas dans une énumération
                     if (el.getKind() == ElementKind.CONSTRUCTOR && e.getKind() != ElementKind.ENUM)
                     {
@@ -92,7 +89,11 @@ public class DCC
                         Constructeurs recupConstructeurs = new Constructeurs(e, el);
                         myWriter.write(recupConstructeurs.obtenirLeOuLesConstructeurs());
                     }
+                    //------------------
                 }
+
+                //Pour les classes et les interfaces
+                //Je vais récupérer leurs méthodes
                 if(e.getKind()==ElementKind.CLASS||e.getKind()==ElementKind.INTERFACE)
                 {
                     String txt="";
@@ -124,5 +125,4 @@ public class DCC
             e.printStackTrace();
         }
     }
-
 }

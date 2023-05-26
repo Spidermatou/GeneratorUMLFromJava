@@ -85,11 +85,13 @@ public class PumlDiagram implements Doclet
         //La méthode qui va créer le diagramme
         creation(element);
     }
+
+    /*
     @Override
     public Set<? extends Option> getSupportedOptions() {
         // This doclet does not support any options.
         return Collections.emptySet();
-    }
+    }*/
 
     /*
     Reporters
@@ -108,11 +110,11 @@ public class PumlDiagram implements Doclet
         String []argument=new String[] {"-private","-sourcepath", "src", "-doclet",
                 "pumlFromJava.PumlDiagram", "-docletpath", "out/production/p-21-projet-renaud-matteo-gillig-matteo-tp-4", "western"};
         String []argument2=new String[] {"-private","-sourcepath", "src", "-doclet",
-                "pumlFromJava.PumlDiagram", "-docletpath", "out/production/p-21-projet-renaud-matteo-gillig-matteo-tp-4", "western","-dca"};
-        voirSiVeutDCA(argument2);
+                "pumlFromJava.PumlDiagram", "-docletpath", "out/production/p-21-projet-renaud-matteo-gillig-matteo-tp-4", "western","--dca"};
+        voirSiVeutDCA(args);
         //Jsp pk mais l'option -d donne l'erreur : javadoc: error - invalid flag: -d
         //Donc je choisis moi-même le chemin dans la méthode de création
-        toolProvider.run(System.out, System.err, argument);
+        toolProvider.run(System.out, System.err, args);
 
     }
 
@@ -133,7 +135,8 @@ public class PumlDiagram implements Doclet
                 if (fichier.createNewFile())
                 {
                     System.out.println("Fichier créer : " + fichier.getName());
-                } else
+                }
+                else
                 {
                     System.out.println("Le fichier existe dèjà.");
                 }
@@ -147,7 +150,6 @@ public class PumlDiagram implements Doclet
             {
                 FileWriter myWriter = new FileWriter(cheminVersDCC);
 
-                //Methode Ecrire pour écrire le code du diagramme dans le fichier uml
                 DCC dcc = new DCC(element, myWriter);
                 dcc.creerDCC();
 
@@ -164,7 +166,6 @@ public class PumlDiagram implements Doclet
         {
             //Je choisis moi-même le chemin vers le fichier
             String cheminVersDCA = "DCAGenere.puml";
-
             //Créer ficher
             try
             {
@@ -172,7 +173,8 @@ public class PumlDiagram implements Doclet
                 if (fichier.createNewFile())
                 {
                     System.out.println("Fichier créer : " + fichier.getName());
-                } else
+                }
+                else
                 {
                     System.out.println("Le fichier existe dèjà.");
                 }
@@ -187,7 +189,6 @@ public class PumlDiagram implements Doclet
             {
                 FileWriter myWriter = new FileWriter(cheminVersDCA);
 
-                //Methode Ecrire pour écrire le code du diagramme dans le fichier uml
                 DCA dca = new DCA(element, myWriter);
                 dca.creerDCA();
 
@@ -195,7 +196,8 @@ public class PumlDiagram implements Doclet
 
                 System.out.println("Fin de l'écriture.");
             }
-            catch (IOException e) {
+            catch (IOException e)
+            {
                 System.out.println("Erreur d'écriture.");
                 e.printStackTrace();
             }
@@ -230,16 +232,63 @@ public class PumlDiagram implements Doclet
         return retour;
     }
 
-    private static void voirSiVeutDCA(String argument[])
+    private static void voirSiVeutDCA(String[] argument)
     {
         for(int i=0;i<argument.length;i++)
         {
-            if(argument[i].toLowerCase().equals("-dca"))
+            System.out.println(argument[i]);
+
+            if(argument[i].toLowerCase().contains("dca"))
             {
                 veutDCA=true;
                 return;
             }
         }
         veutDCA=false;
+    }
+
+    //---Pour les options---
+
+    @Override
+    public Set<? extends Option> getSupportedOptions() {
+        Option[] options = {
+                new Option() {
+                    private final List<String> someOption = Arrays.asList(
+                            "--dca"
+                    );
+
+                    @Override
+                    public int getArgumentCount() {
+                        return 0;
+                    }
+
+                    @Override
+                    public String getDescription() {
+                        return "Pour le DCA";
+                    }
+
+                    @Override
+                    public Option.Kind getKind() {
+                        return Option.Kind.STANDARD;
+                    }
+
+                    @Override
+                    public List<String> getNames() {
+                        return someOption;
+                    }
+
+                    @Override
+                    public String getParameters() {
+                        return "--dca";
+                    }
+
+                    @Override
+                    public boolean process(String opt, List<String> arguments)
+                    {
+                        return true;
+                    }
+                }
+        };
+        return new HashSet<>(Arrays.asList(options));
     }
 }

@@ -3,8 +3,6 @@ package pumlFromJava.classes;
 import pumlFromJava.PumlDiagram;
 
 import javax.lang.model.element.*;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.ElementFilter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +22,6 @@ public class Constructeurs
 
     public String obtenirLeOuLesConstructeurs()
     {
-        //---------------------------
         String constructeur="";
 
         //Je récupère les modificateurs
@@ -32,35 +29,47 @@ public class Constructeurs
         constructeur+=recupLesModificateur.obtenirLesModificateurs();
 
         //Il y a juste que el.toString() écrit le nom entier avec le package
-        constructeur+=" <<create>> "+ PumlDiagram.subStr(grandElement.getSimpleName().toString())+" (";
-        //TypeElement ede=(TypeElement) e.getEnclosingElement();
 
-        //Parametre
+        //On écrit le stéréotype <<create>> et le nom de la classe
+        constructeur+=" <<create>> "+ PumlDiagram.subStr(grandElement.getSimpleName().toString())+" (";
+
+        //Parametres
+        //Je met dans une liste, chaque type de paramêtre du constructeur
+        //(grâce à la methode subStrParametre)
         List<String> fin = subStrParametre(petitElement.asType().toString());
         int i=0;
 
+        //Je cast et récupère dans une liste de VariableElement les nom des paramêtre
         ExecutableElement ee=(ExecutableElement)petitElement;
         List<? extends  VariableElement> lst=ee.getParameters();
 
+        //Comme on a le même élément (c'est-à-dire le constructeur), les 2 listes auront la même taille (car un nom de paramêtre correspond à un type)
+
+        //Pour chaque élément dans la liste des nom
         for(VariableElement ve:lst)
         {
+            //Si je suis au dernier élément de la liste
             if(i==fin.size()-1)
             {
+                //J'écris en premier le nom du paramêtre
                 constructeur += ve + ":";
+                //Puis, son type
+                //(Mais pour le dernier parametre, je vais retire ")void" à la fin)
                 constructeur += enleverVoidParentheseALaFin(fin.get(i));
             }
+            //Sinon
             else
             {
+                //J'écris en premier le nom du paramêtre et son type
                 constructeur += ve + ":";
                 constructeur += fin.get(i);
             }
-
             i++;
         }
 
-         constructeur+=")\n";
+        //Je termine avec une parenthèse
+        constructeur+=")\n";
 
-        //---------------------------
         return constructeur;
     }
 
@@ -77,6 +86,9 @@ public class Constructeurs
             return texte;
         }
     }
+
+    //Une méthode pour enlever ")void" à la fin
+    //C'est comme la méthode enleverVoidALaFin, sauf que j'enlève en plus une parenthèse
     public String enleverVoidParentheseALaFin(String texte)
     {
         try

@@ -23,10 +23,12 @@ public class DCA
     Element element;
     FileWriter myWriter;
 
+    //La méthode qui créer le DCA
     public void creerDCA()
     {
         try
         {
+            //L'en-tête du fichier
             myWriter.write("@startuml\n");
             myWriter.write("skinparam classAttributeIconSize 0\n"+
                     "skinparam classFontStyle Bold\n"+
@@ -37,11 +39,6 @@ public class DCA
             //Nom du package
             myWriter.write("package "+element.getSimpleName().toString()+"\n{\n");
 
-            //L'en-tête du fichier
-
-            //Par contre, comme on écrit directement le nom du package, pour l'instant notre Doclet ne marche que si on lui fournit un et un seul package.
-            //Nom du package
-
             //Pour récupérer les liens pour les héritages, associations et interfaces
             Heritages recupHeritage = new Heritages(element);
             Associations recupAssociations = new Associations(element);
@@ -49,7 +46,6 @@ public class DCA
             ArrayList<String> heritages = recupHeritage.obtenirLesHeritages();
             ArrayList<String> associations = recupAssociations.obtenirLesAssociations();
             ArrayList<String> interfaces = recupInterfaces.obtenirLesImplements();
-
 
             //Chaque élément présent dans le package
             for(Element e:element.getEnclosedElements())
@@ -73,7 +69,6 @@ public class DCA
                     myWriter.write("\n{\n");
                 }
 
-
                 //Pour chaque élément dans cet élément (donc chaque élément dans la classe/énumération ou interface)
                 for (Element el : e.getEnclosedElements())
                 {
@@ -85,12 +80,10 @@ public class DCA
                     for (String s : attributs)
                         myWriter.write(s);
 
+                    //Je suis dans un DCA, donc pas besoin des méthodes et constructeurs
                 }
-
                 myWriter.write("\n}\n");
-
             }
-
 
             //Ecriture des liens pour les interfaces, héritages et associations
             for (String s : interfaces)

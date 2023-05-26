@@ -3,10 +3,8 @@ package pumlFromJava.classes;
 import pumlFromJava.PumlDiagram;
 
 import javax.lang.model.element.*;
-import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.ElementFilter;
 import java.util.List;
 
 public class Methodes
@@ -67,6 +65,11 @@ public class Methodes
                      {
                          texte += "):" + PumlDiagram.subStr(((ExecutableElement) methode).getReturnType().toString()) + "\n";
                      }
+
+                     //En fait on peut savoir le type avec l'énumération TypeKind
+                     //c mieux que des susbstring et equal un peu tkt
+                     //if ((((ExecutableElement) methode).getReturnType().getKind() == TypeKind.BOOLEAN))
+                         //System.out.println(((ExecutableElement) methode).getReturnType().getKind());
                  }
             }
         }
@@ -79,8 +82,6 @@ public class Methodes
         boolean res=false;
         if(txt.length()>=4)
         {
-            //System.out.println(txt.substring(txt.length()-4));
-
             if (txt.substring(txt.length() - 4).equals("void"))
             {
                 res = true;

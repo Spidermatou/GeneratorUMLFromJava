@@ -48,23 +48,34 @@ public class Constructeurs
         //Pour chaque élément dans la liste des nom
         for(VariableElement ve:lst)
         {
-            //Si je suis au dernier élément de la liste
-            if(i==fin.size()-1)
-            {
-                //J'écris en premier le nom du paramêtre
-                constructeur += ve + ":";
-                //Puis, son type
-                //(Mais pour le dernier parametre, je vais retire ")void" à la fin)
-                constructeur += enleverVoidParentheseALaFin(fin.get(i));
+            if(lst.size()>0) {
+
+
+                if (i != 0)
+                    constructeur += ",";
+
+                //Si je suis au dernier élément de la liste
+                if (i == fin.size() - 1) {
+                    //J'écris en premier le nom du paramêtre
+                    constructeur += ve + ":";
+                    //Puis, son type
+                    //(Mais pour le dernier parametre, je vais retire ")void" à la fin)
+                    constructeur += fin.get(i);
+                    //System.out.println(ve +" et "+enleverVoidParentheseALaFin(fin.get(i)));
+
+
+                }
+                //Sinon
+                else {
+                    //J'écris en premier le nom du paramêtre et son type
+                    constructeur += ve + ":";
+                    constructeur += fin.get(i);
+                    //System.out.println(ve +" et "+fin.get(i));
+
+                }
+
+                i++;
             }
-            //Sinon
-            else
-            {
-                //J'écris en premier le nom du paramêtre et son type
-                constructeur += ve + ":";
-                constructeur += fin.get(i);
-            }
-            i++;
         }
 
         //Je termine avec une parenthèse
@@ -102,60 +113,81 @@ public class Constructeurs
         }
     }
 
+    public static String enleverParentheseDebutEtFinEtVoid(String s)
+    {
+        try
+        {
+            s=s.substring(1,s.length()-1);
+            s=s.substring(0,s.length()-4);
+            return s;
+        }
+        catch(IndexOutOfBoundsException e)
+        {
+            return s;
+        }
+    }
+
+    //OK CA MARCHE ENFFFFIIIINNNN !!!
+    //VICTOIRE CAMARADE !!!!!
+    //par contre el margoulin mamamia pizza baguette croissant pain au chocolat ou bonne chocolatine du sud de la france
     public static List<String> subStrParametre(String nom)
     {
+        nom=enleverParentheseDebutEtFinEtVoid(nom);
+        System.out.println(nom);
         String retour = "";
         List<String> listePara = new ArrayList<>();
-        int position=0;
+
+        int nbPara=0;
+        int nbAjout=0;
+
+        if(!nom.equals(""))
+            nbPara=1;
+
         for(int i=0;i<nom.length();i++)
+            if(nom.charAt(i)==',')
+                nbPara++;
+
+        boolean fini=false;
+        boolean passe=false;
+        while(nbPara!=nbAjout)
         {
-            if(nom.charAt(i) == ',')
+            if(nbPara==1)
             {
-                String retour2 = "";
-                String retour2inverse = "";
-                int j = i;
-                while(nom.charAt(j) != '.')
-                {
-                    retour2 += nom.charAt(j);
-                    j--;
+                retour=PumlDiagram.subStr(nom);
+                listePara.add(retour);
+                nbAjout++;
+                passe=true;
+            }
+
+            fini=false;
+            int i=0;
+            if(!passe)
+            {
+
+
+            while (!fini) {
+                if (i == nom.length()) {
+                    retour = PumlDiagram.subStr(nom);
+                    listePara.add(retour);
+                    nbAjout++;
+                    fini = true;
+                    System.out.println(retour);
+                } else if (nom.charAt(i) == ',') {
+                    retour = nom.substring(0, i);
+                    retour = PumlDiagram.subStr(retour);
+                    nom = nom.substring(i + 1, nom.length());
+                    listePara.add(retour);
+                    nbAjout++;
+                    fini = true;
+                    System.out.println(retour);
                 }
 
-                int k = retour2.length()-1;
-                while(k >= 0)
-                {
-                    retour2inverse += retour2.charAt(k);
-                    k--;
-                }
-                listePara.add(retour2inverse);
+                i++;
             }
-            if(nom.charAt(i)=='.')
-            {
-                position=i;
             }
         }
 
-
-        if(position==0)
-        {
-            retour = nom;
-        }
-        else
-        {
-            listePara.add(nom.substring(position + 1));
-        }
-
-
-        //Dans certains cas, les noms sont entre < > (dans des listes, init, etc ...), et comme on garde tout après le dernier point, ce caractère peut rester
-        //On va alors simplement l'enlever s'il y a ce caractère
-        /*
-        if(listePara.get(listePara.size()-1).charAt(listePara.get(listePara.size()-1).length()-1)=='>')
-        {
-            String nouvMot;
-            nouvMot = listePara.get(listePara.size() - 1).substring(0, listePara.get(listePara.size() - 1).length() - 1);
-
-            listePara.remove(listePara.get(listePara.size()-1));
-            listePara.add(nouvMot);
-        }*/
+        System.out.println(listePara);
         return listePara;
     }
 }

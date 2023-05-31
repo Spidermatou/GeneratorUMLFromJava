@@ -5,15 +5,24 @@ skinparam style strictuml
 hide empty members
 package western
 {
-CLASS Brigand
+CLASS Boisson
 {
-# {static} LOOK_PAR_DEFAUT:String
-- look:String
-- recompense:Integer 
-- estLibre:boolean 
 
 }
-CLASS Ripou
+CLASS Personnage
+{
+- nom:String
+
+}
+CLASS Narrateur
+{
+
+}
+INTERFACE Nommable<<interface>>
+{
+
+}
+CLASS Histoire4
 {
 
 }
@@ -22,22 +31,22 @@ CLASS Substantif
 - nom:String
 
 }
-CLASS Histoire4
+ENUM Genre<<énumération>>
+{
++ {static} {ReadOnly} FEMININ
++ {static} {ReadOnly} MASCULIN
+
+}
+CLASS Ripou
 {
 
 }
-INTERFACE Nommable<<interface>>
+CLASS Brigand
 {
-
-}
-CLASS Dame
-{
+# {static} LOOK_PAR_DEFAUT:String
+- look:String
+- recompense:Integer 
 - estLibre:boolean 
-
-}
-CLASS Personnage
-{
-- nom:String
 
 }
 CLASS Cowboy
@@ -45,42 +54,45 @@ CLASS Cowboy
 - gains:Integer 
 
 }
+CLASS Dame
+{
+- estLibre:boolean 
+
+}
 INTERFACE HorsLaLoi<<interface>>
 {
 
 }
-ENUM Genre<<énumération>>
-{
-+ {static} {ReadOnly} FEMININ
-+ {static} {ReadOnly} MASCULIN
-
-}
-CLASS Boisson
-{
-
-}
-CLASS Narrateur
-{
-
-}
-
-HorsLaLoi <|... Brigand
-
-HorsLaLoi <|... Ripou
 
 Nommable <|... Personnage
 
+HorsLaLoi <|... Ripou
+
+HorsLaLoi <|... Brigand
+
 Nommable <|-- HorsLaLoi
 
-Personnage <|--- Brigand
+Personnage <|--- Narrateur
 
 Cowboy <|--- Ripou
 
-Personnage <|--- Dame
+Personnage <|--- Brigand
 
 Personnage <|--- Cowboy
 
-Personnage <|--- Narrateur
+Personnage <|--- Dame
+
+Boisson --- Substantif : substantif
+
+Boisson --- Boisson : EAU
+
+Personnage --- Boisson : BOISSON_PAR_DEFAUT
+
+Personnage --- Boisson : boisson
+
+Substantif --- Genre : genre
+
+Ripou --- Brigand : brigand
 
 Brigand --- Dame : captives
 
@@ -88,26 +100,14 @@ Brigand --- Cowboy : gardien
 
 Brigand --- Boisson : boissonParDefaut
 
-Ripou --- Brigand : brigand
+Cowboy --- HorsLaLoi : captures
 
-Substantif --- Genre : genre
+Cowboy --- Boisson : boissonParDefaut
 
 Dame --- Cowboy : sauveur
 
 Dame --- HorsLaLoi : ravisseur
 
 Dame --- Boisson : boissonParDefaut
-
-Personnage --- Boisson : BOISSON_PAR_DEFAUT
-
-Personnage --- Boisson : boisson
-
-Cowboy --- HorsLaLoi : captures
-
-Cowboy --- Boisson : boissonParDefaut
-
-Boisson --- Substantif : substantif
-
-Boisson --- Boisson : EAU
 }
 @enduml

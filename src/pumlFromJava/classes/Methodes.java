@@ -5,6 +5,7 @@ import pumlFromJava.PumlDiagram;
 import javax.lang.model.element.*;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Set;
 
@@ -78,9 +79,15 @@ public class Methodes
                  for(AnnotationMirror an : anno)
                  {
                      //si la methode est override on ajoute redefine au texte de la methode
+
+                     //petit probeleme avec interface et heritage tout ca tu connais
+                     /*String classeBigBoss;
+                     TypeElement typeElement = (TypeElement) methode.getEnclosingElement();
+                     TypeMirror heritageSilYA = typeElement.getSuperclass();
+                     classeBigBoss=PumlDiagram.subStr(heritageSilYA.toString());*/
                      if(an.toString().equals("@java.lang.Override"))
                      {
-                         texte += "[redefine::"+"]";
+                         texte += "{redefine::"/*+classeBigBoss*/+"}"+PumlDiagram.subStr(methode.getSimpleName().toString());
                      }
                  }
 

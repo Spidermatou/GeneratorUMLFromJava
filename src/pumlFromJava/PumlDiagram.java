@@ -117,7 +117,9 @@ public class PumlDiagram implements Doclet
 
         //veutDCA=voirSiVeutDCA(args);
 
-        //Jsp pk mais l'option -d donne l'erreur : javadoc: error - invalid flag: -d
+        //javadoc -private -sourcepath src -doclet pumlFromJava.PumlDiagram -docletpath out/production/P21Projet western --dca
+
+        //+ option -d
         //Donc je choisis moi-même le chemin dans la méthode de création
         toolProvider.run(System.out, System.err, args);
 

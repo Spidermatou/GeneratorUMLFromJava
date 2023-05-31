@@ -6,6 +6,7 @@ import javax.lang.model.element.*;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import java.util.List;
+import java.util.Set;
 
 public class Methodes
 {
@@ -52,18 +53,18 @@ public class Methodes
                  }
 
                  if(regardeSiVoidALaFin(((ExecutableElement) methode).getReturnType().toString()) )
-                    texte+=")\n";
+                    texte+=")";
 
                  else
                  {
                      if (((ExecutableElement) methode).getReturnType().toString().charAt(((ExecutableElement) methode).getReturnType().toString().length()-1)=='>')
                      {
                          //Il faut s'occuper de cette partie car c'est les listes
-                         texte += "):" + parameterList( PumlDiagram.subStr( ((ExecutableElement) methode).getReturnType().toString() )) + "\n";
+                         texte += "):" + parameterList( PumlDiagram.subStr( ((ExecutableElement) methode).getReturnType().toString() )) ;
                      }
                      else
                      {
-                         texte += "):" + PumlDiagram.subStr(((ExecutableElement) methode).getReturnType().toString()) + "\n";
+                         texte += "):" + PumlDiagram.subStr(((ExecutableElement) methode).getReturnType().toString()) ;
                      }
 
                      //En fait on peut savoir le type avec l'énumération TypeKind
@@ -71,6 +72,19 @@ public class Methodes
                      //if ((((ExecutableElement) methode).getReturnType().getKind() == TypeKind.BOOLEAN))
                          //System.out.println(((ExecutableElement) methode).getReturnType().getKind());
                  }
+
+                 //On teste si la méthode est override
+                 List<? extends AnnotationMirror> anno = methode.getAnnotationMirrors();
+                 for(AnnotationMirror an : anno)
+                 {
+                     //si la methode est override on ajoute redefine au texte de la methode
+                     if(an.toString().equals("@java.lang.Override"))
+                     {
+                         texte += "[redefine::"+"]";
+                     }
+                 }
+
+                 texte+='\n';
             }
         }
 

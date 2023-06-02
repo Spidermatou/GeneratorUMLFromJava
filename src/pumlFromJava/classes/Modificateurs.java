@@ -1,6 +1,7 @@
 package pumlFromJava.classes;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 
 public class Modificateurs
@@ -22,23 +23,23 @@ public class Modificateurs
         //J'utilise la méthode getModifiers() de l'interface Element qui renvoie une liste des modificateurs de cet élément
         for (Modifier mo : element.getModifiers())
         {
-            //En fonction du modificateur, j'écris +, - ou #
-            if (mo == Modifier.PUBLIC)
-                modificateurs+="+ ";
-            else if (mo == Modifier.PRIVATE)
-                modificateurs+="- ";
-            else if (mo == Modifier.PROTECTED)
-                modificateurs+="# ";
+                //En fonction du modificateur, j'écris +, - ou #
+                if (mo == Modifier.PUBLIC)
+                    modificateurs += "+ ";
+                else if (mo == Modifier.PRIVATE)
+                    modificateurs += "- ";
+                else if (mo == Modifier.PROTECTED)
+                    modificateurs += "# ";
 
-            //Je peux aussi savoir si c'est static, final ou abstract (ou default)
-            if (mo == Modifier.STATIC)
-                modificateurs+="{static} ";
-            if (mo == Modifier.FINAL)
-                modificateurs+="{ReadOnly} ";
-            if(mo == Modifier.ABSTRACT)
-                modificateurs+="{abstract}";
-            if(mo==Modifier.DEFAULT)
-                modificateurs+="{default}";
+                //Je peux aussi savoir si c'est static, final ou abstract (ou default)
+                if (mo == Modifier.STATIC)
+                    modificateurs += "{static} ";
+                if (mo == Modifier.FINAL)
+                    modificateurs += "{ReadOnly} ";
+                if (mo == Modifier.ABSTRACT)
+                    modificateurs += "{abstract}";
+                if (mo == Modifier.DEFAULT)
+                    modificateurs += "{default}";
         }
         return modificateurs;
     }

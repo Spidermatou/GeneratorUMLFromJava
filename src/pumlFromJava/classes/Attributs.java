@@ -34,9 +34,13 @@ public class Attributs
         //Comme String est une classe, je vérifie aussi qu'on prenne juste cette classe qu'on met aussi en attribut dans les diagrammes
         if (typeKind.isPrimitive()||element.getKind() == ElementKind.ENUM_CONSTANT||(PumlDiagram.subStr(element.asType().toString()).equals("String")&&element.getKind()!=ElementKind.METHOD))
         {
-            //Pour récupérer les modificateurs de l'élément
-            Modificateurs recupModificateur=new Modificateurs(element);
-            attributs.add(recupModificateur.obtenirLesModificateurs());
+            //Si c'est une constante d'énumération (je ne prends pas les modificateurs)
+            if(element.getKind() != ElementKind.ENUM_CONSTANT)
+            {
+                //Pour récupérer les modificateurs de l'élément
+                Modificateurs recupModificateur = new Modificateurs(element);
+                attributs.add(recupModificateur.obtenirLesModificateurs());
+            }
 
             //Petit cas spécial où on met dans les attributs les String
             if(PumlDiagram.subStr(element.asType().toString()).equals("String"))

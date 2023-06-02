@@ -42,13 +42,23 @@ public class Associations
                          //Et que ce n'est pas la classe String
                          if (!PumlDiagram.subStr(el.asType().toString()).equals("String"))
                          {
+                             /*
+                             //+multiplicité
+                             //if(el.asType().getKind()==TypeKind.ARRAY)
+                             String cardi="";
+                             if(!el.asType().getKind().isPrimitive())
+                             {
+                                 cardi="\"*\"";
+                             }*/
+
                              //Et enfin que cette association n'est pas déjà présente dans la liste
                              if (!associations.contains(e.getSimpleName() + " --- " + PumlDiagram.subStr(el.asType().toString()) + " : " + PumlDiagram.subStr(el.getSimpleName().toString())))
-                                 associations.add(e.getSimpleName() + " --- " + PumlDiagram.subStr(el.asType().toString()) + " : " + PumlDiagram.subStr(el.getSimpleName().toString()));
+                                 associations.add(e.getSimpleName() +" --- " + PumlDiagram.subStr(el.asType().toString()) + " : " + PumlDiagram.subStr(el.getSimpleName().toString()));
                          }
                      }
                  }
              }
+
 
          }
          return associations;

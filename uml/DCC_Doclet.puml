@@ -20,8 +20,6 @@ package jdk-javadoc.doclet
     interface Doclet <<interface>>
     {
         +{abstract} getName():String
-        'Cette ligne a modifier :
-        'jsp comment le mettre le type de retour
         +{abstract} getSupportOption():set<? extends Doclet.Option>
         +{abstract} getSupportedSourceVersion():SourceVersion
         +{abstract} init(locale:Locale,reporter:Reporter)
@@ -88,7 +86,7 @@ package jdk-javadoc.doclet
 
     'Represents the operating environment of a single invocation of the doclet. This object can be used to access the program structures, various utilities and the user specified elements on the command line.
     'https://docs.oracle.com/en/java/javase/19/docs/api//jdk.javadoc/jdk/javadoc/doclet/DocletEnvironment.html
-    interface DocletEnvironnment
+    interface DocletEnvironment
     {
         +{abstract} getSpecifiedElements():Set<? extends Element> ()
         +{abstract} getIncludedElements():Set<? extends Element>
@@ -103,7 +101,7 @@ package jdk-javadoc.doclet
 
     'Le mode spécifiant le niveau de détails du module de documentatino.
     'https://docs.oracle.com/en/java/javase/19/docs/api//jdk.javadoc/jdk/javadoc/doclet/DocletEnvironment.ModuleMode.html
-    enum DocletEnvironnment.Module
+    enum DocletEnvironment.ModuleMode
     {
         ALL
         API
@@ -139,14 +137,90 @@ package jdk-javadoc.doclet
     }
 }
 
-'Une interface pour les outils de la ligne de commande pour fournir un moyen d'être invoquer sans démarrer une nouvelle VM
-'https://download.java.net/java/GA/jdk14/docs/api/java.base/java/util/spi/ToolProvider.html
-interface ToolProvider <<interface>>
+package java.util.spi
 {
-    +{abstract}name():String
-    +{abstract}run():(out:PrintWriter,err:PrintWriter,args[*]:String):Integer
-    +{abstract}default run():(out:PrintWriter,err:PrintWriter,args[*]:String):Integer
-    +{abstract} {static} findFirst(name:String):Optional<ToolProvider>
+    'Une interface pour les outils de la ligne de commande pour fournir un moyen d'être invoquer sans démarrer une nouvelle VM
+    'https://download.java.net/java/GA/jdk14/docs/api/java.base/java/util/spi/ToolProvider.html
+    interface ToolProvider <<interface>>
+    {
+        +{abstract}name():String
+        +{abstract}run():(out:PrintWriter,err:PrintWriter,args[*]:String):Integer
+        +{abstract}default run():(out:PrintWriter,err:PrintWriter,args[*]:String):Integer
+        +{abstract} {static} findFirst(name:String):Optional<ToolProvider>
+    }
+
+    'https://download.java.net/java/GA/jdk14/docs/api/java.base/java/util/spi/ResourceBundleProvider.html
+    interface ResourceBundleProvider <<interface>>
+    {
+       +{abstract}getBundle(baseName:String,locale Locale):ResourceBundle
+    }
+
+    'https://download.java.net/java/GA/jdk14/docs/api/java.base/java/util/spi/ResourceBundleControlProvider.html
+    interface ResourceBundleControlProvider <<interface>>
+    {
+        +{abstract}getControl(baseName:String):ResourceBundle.Control
+    }
+
+    'https://download.java.net/java/GA/jdk14/docs/api/java.base/java/util/spi/AbstractResourceBundleProvider.html
+    class AbstractResourceBundleProvider
+    {
+        #<<create>>AbstractResourceBundleProvider()
+        #<<create>>AbstractResourceBundleProvider(formats:String)
+        +getBundle(baseName:String, locale Locale):ResourceBundle
+        #toBundleName(baseName:String,locale:Locale):String
+    }
+
+    'https://download.java.net/java/GA/jdk14/docs/api/java.base/java/util/spi/CalendarDataProvider.html
+    class CalendarDataProvider
+    {
+        #<<create>>CalendarDataProvider()
+        +{abstract} getFirstDayOfWeek(locale:Locale):Integer
+        +{abstract} getMinimalDaysInFirstWeek(locale:Locale):Integer
+    }
+
+    'https://download.java.net/java/GA/jdk14/docs/api/java.base/java/util/spi/CalendarNameProvider.html
+    class CalendarNameProvider
+    {
+        #<<create>>CalendarNameProvider()
+        +{abstract} getDisplayName(calendarType:String, field:integer, value:integer, style:integer, locale:Locale):String
+        +{abstract} getDisplayNames(calendarType:String, field:integer, value:integer, style:integer, locale:Locale):Map<String,Integer>
+    }
+
+    'https://download.java.net/java/GA/jdk14/docs/api/java.base/java/util/spi/CurrencyNameProvider.html
+    class CurrencyNameProvider
+    {
+        #<<create>>CurrencyNameProvider()
+        +getDisplayName(currencyCode:String, locale:Locale):String
+        +{abstract} getSymbol(currencyCode:String, locale:Locale):String
+    }
+
+    'https://download.java.net/java/GA/jdk14/docs/api/java.base/java/util/spi/LocaleNameProvider.html
+    class LocaleNameProvider
+    {
+        #<<create>>LocaleNameProvider()
+        + {abstract}getDisplayLanguage(languageCode:String,locale:Locale):String
+        + getDisplayScript(scriptCode:String,locale:Locale):String
+        + {abstract} getDisplayCountry(countryCode:String,locale:Locale):String
+        + {abstract} getDisplayVariant(variant:String,locale:Locale):String
+        + getDisplayUnicodeExtensionKey(key:String,locale:Locale):String
+        + getDisplayUnicodeExtensionType(type:String,key:String,locale:Locale):String
+    }
+
+    'https://download.java.net/java/GA/jdk14/docs/api/java.base/java/util/spi/LocaleServiceProvider.html
+    class LocaleServiceProvider
+    {
+        #<<create>>LocaleServiceProvider()
+        + {abstract}getAvailableLocales(): Locale[]
+        + isSupportedLocale(locale:Locale):boolean
+    }
+
+    'https://download.java.net/java/GA/jdk14/docs/api/java.base/java/util/spi/TimeZoneNameProvider.html
+    class TimeZoneNameProvider
+    {
+        #<<create>>TimeZoneNameProvider()
+        + {abstract} getDisplayName(ID:String, daylight:boolean, style:integer, locale:Locale):String
+        + getGenericDisplayName(ID:String, style:integer, locale:Locale):String
+    }
 }
 
 Doclet -- Doclet.Option:<<use>>
@@ -154,6 +228,13 @@ Doclet.Option -- "Doclet.Option.Kind":<<use>>
 StandardDoclet -- Reporter:<<use>>
 StandardDoclet -- Doclet.Option:<<use>>
 Taglet -- Taglet.Location:<<use>>
-DocletEnvironnment -- DocletEnvironment.ModuleMode:<<use>>
+DocletEnvironment -- DocletEnvironment.ModuleMode:<<use>>
+
+ResourceBundleProvider <|.. AbstractResourceBundleProvider
+LocaleServiceProvider <|-- CalendarNameProvider
+CurrencyNameProvider <|-- LocaleServiceProvider
+LocaleNameProvider <|-- LocaleServiceProvider
+TimeZoneNameProvider <|-- LocaleServiceProvider
+CalendarDataProvider <|-- LocaleServiceProvider
 
 @enduml

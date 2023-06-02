@@ -57,20 +57,33 @@ public class Methodes
                      i++;
                  }
 
-                 if(regardeSiVoidALaFin(((ExecutableElement) methode).getReturnType().toString()) )
-                    texte+=")";
 
-                 else
-                 {
-                     if (((ExecutableElement) methode).getReturnType().toString().charAt(((ExecutableElement) methode).getReturnType().toString().length()-1)=='>')
-                     {
-                         //Il faut s'occuper de cette partie car c'est les listes
-                         texte += "):" + parameterList( PumlDiagram.subStr( ((ExecutableElement) methode).getReturnType().toString() )) ;
-                     }
-                     else
-                     {
-                         texte += "):" + PumlDiagram.subStr(((ExecutableElement) methode).getReturnType().toString()) ;
-                     }
+
+                //----Pour le type de retour----
+                //Si c'est un Void
+                if((((ExecutableElement) methode).getReturnType().getKind() == TypeKind.VOID))
+                {
+                    texte+=")";
+                }
+                //Sinon, pour les autres types de retour
+                else
+                {
+                    //INT
+                    if(((ExecutableElement) methode).getReturnType().getKind() == TypeKind.INT)
+                    {
+                        texte+="):Integer";
+                    }
+                    //Pour les liste
+                    else if (((ExecutableElement) methode).getReturnType().toString().charAt(((ExecutableElement) methode).getReturnType().toString().length()-1)=='>')
+                    {
+                        texte += "):" + parameterList( PumlDiagram.subStr( ((ExecutableElement) methode).getReturnType().toString() )) ;
+                    }
+                    //Tout le reste
+                    else
+                    {
+                        texte += "):" + PumlDiagram.subStr(((ExecutableElement) methode).getReturnType().toString()) ;
+                    }
+
 
                      //En fait on peut savoir le type avec l'énumération TypeKind
                      //c mieux que des susbstring et equal un peu tkt

@@ -1,12 +1,16 @@
 package pumlFromJava.classes;
 
+import pumlFromJava.FirstDoclet;
 import pumlFromJava.PumlDiagram;
 
 import javax.lang.model.element.*;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public class Methodes
@@ -76,6 +80,7 @@ public class Methodes
 
                  //On teste si la méthode est override
                  List<? extends AnnotationMirror> anno = methode.getAnnotationMirrors();
+                 Boolean test = false;
                  for(AnnotationMirror an : anno)
                  {
                      //si la methode est override on ajoute redefine au texte de la methode
@@ -87,12 +92,16 @@ public class Methodes
                      classeBigBoss=PumlDiagram.subStr(heritageSilYA.toString());*/
                      if(an.toString().equals("@java.lang.Override"))
                      {
-                         texte += "{redefine::"/*+classeBigBoss*/+"}"+PumlDiagram.subStr(methode.getSimpleName().toString());
+                         TypeElement testTE = (TypeElement) element;
+                         texte += "{redefine::"/*+classeBigBoss*/+PumlDiagram.subStr( testTE.getSuperclass().toString())+"."+PumlDiagram.subStr(methode.getSimpleName().toString()+"}");
+                         test = true;
                      }
                  }
 
+
                  texte+='\n';
             }
+
         }
 
         return texte;
@@ -108,6 +117,7 @@ public class Methodes
                 res = true;
             }
         }
+
 
         return res;
     }

@@ -33,8 +33,8 @@ CLASS Substantif
 }
 ENUM Genre<<énumération>>
 {
-+ {static} {ReadOnly} FEMININ
-+ {static} {ReadOnly} MASCULIN
+FEMININ
+MASCULIN
 
 }
 CLASS Ripou
@@ -82,32 +82,32 @@ Personnage <|--- Cowboy
 
 Personnage <|--- Dame
 
-Boisson --- Substantif : substantif
+Boisson "0..1" ---> "0..1" Substantif : substantif >
 
-Boisson --- Boisson : EAU
+Boisson "0..1" ---> "0..1" Boisson : EAU >
 
-Personnage --- Boisson : BOISSON_PAR_DEFAUT
+Personnage "0..1" ---> "0..1" Boisson : BOISSON_PAR_DEFAUT >
 
-Personnage --- Boisson : boisson
+Personnage "0..1" ---> "0..1" Boisson : boisson >
 
-Substantif --- Genre : genre
+Substantif "0..1" ---> "0..1" Genre : genre >
 
-Ripou --- Brigand : brigand
+Ripou "0..1" ---> "0..1" Brigand : brigand >
 
-Brigand --- Dame : captives
+Brigand "*" ---> "0..1" Dame : captives >
 
-Brigand --- Cowboy : gardien
+Brigand "0..1" ---> "0..1" Cowboy : gardien >
 
-Brigand --- Boisson : boissonParDefaut
+Brigand "0..1" ---> "0..1" Boisson : boissonParDefaut >
 
-Cowboy --- HorsLaLoi : captures
+Cowboy "*" ---> "0..1" HorsLaLoi : captures >
 
-Cowboy --- Boisson : boissonParDefaut
+Cowboy "0..1" ---> "0..1" Boisson : boissonParDefaut >
 
-Dame --- Cowboy : sauveur
+Dame "0..1" ---> "0..1" Cowboy : sauveur >
 
-Dame --- HorsLaLoi : ravisseur
+Dame "0..1" ---> "0..1" HorsLaLoi : ravisseur >
 
-Dame --- Boisson : boissonParDefaut
+Dame "0..1" ---> "0..1" Boisson : boissonParDefaut >
 }
 @enduml

@@ -51,9 +51,17 @@ public class Associations
                                  cardi="\"*\"";
                              }*/
 
+                             String multi="";
+                             if(el.asType().toString().charAt(el.asType().toString().length()-1)=='>')
+                                 multi=" \"*\"";
+                             else
+                                 multi=" \"0..1\"";
+
                              //Et enfin que cette association n'est pas déjà présente dans la liste
-                             if (!associations.contains(e.getSimpleName() + " --- " + PumlDiagram.subStr(el.asType().toString()) + " : " + PumlDiagram.subStr(el.getSimpleName().toString())))
-                                 associations.add(e.getSimpleName() +" --- " + PumlDiagram.subStr(el.asType().toString()) + " : " + PumlDiagram.subStr(el.getSimpleName().toString()));
+                             if (!associations.contains(e.getSimpleName() +multi+" ---> \"0..1\" " + PumlDiagram.subStrLiens(el.asType().toString()) + " : " + PumlDiagram.subStr(el.getSimpleName().toString())+" >"))
+                             {
+                                 associations.add(e.getSimpleName() +multi+" ---> \"0..1\" " + PumlDiagram.subStrLiens(el.asType().toString()) + " : " + PumlDiagram.subStr(el.getSimpleName().toString())+" >");
+                             }
                          }
                      }
                  }

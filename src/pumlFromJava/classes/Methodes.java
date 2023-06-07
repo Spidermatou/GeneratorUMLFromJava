@@ -4,6 +4,7 @@ import pumlFromJava.FirstDoclet;
 import pumlFromJava.PumlDiagram;
 
 import javax.lang.model.element.*;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import java.lang.annotation.Annotation;
@@ -46,12 +47,12 @@ public class Methodes
                      if(i==lst.size()-1)
                      {
                          texte += lst.get(i) + ":";
-                         texte += PumlDiagram.subStr(ve.asType().toString());
+                         texte += PumlDiagram.subStrParametres(ve.asType().toString());
                      }
                      else
                      {
                          texte += lst.get(i) + ":";
-                         texte += PumlDiagram.subStr(ve.asType().toString());
+                         texte += PumlDiagram.subStrParametres(ve.asType().toString());
                      }
 
                      i++;
@@ -93,23 +94,35 @@ public class Methodes
 
                  //On teste si la méthode est override
                  List<? extends AnnotationMirror> anno = methode.getAnnotationMirrors();
-                 Boolean test = false;
                  for(AnnotationMirror an : anno)
                  {
                      //si la methode est override on ajoute redefine au texte de la methode
 
                      //petit probeleme avec interface et heritage tout ca tu connais
-                     /*String classeBigBoss;
+                     String classeBigBoss="";
                      TypeElement typeElement = (TypeElement) methode.getEnclosingElement();
                      TypeMirror heritageSilYA = typeElement.getSuperclass();
-                     classeBigBoss=PumlDiagram.subStr(heritageSilYA.toString());*/
                      if(an.toString().equals("@java.lang.Override"))
                      {
-                         TypeElement testTE = (TypeElement) element;
-                         texte += "{redefine::"/*+classeBigBoss*/+PumlDiagram.subStr( testTE.getSuperclass().toString())+"."+PumlDiagram.subStr(methode.getSimpleName().toString()+"}");
-                         test = true;
+
+
+
+                         //   if(typeElement.getAnnotation(methode.))
+                         //       classeBigBoss=typeElement.getSuperclass().toString();
+                         //if(!typeElement.getInterfaces().isEmpty())
+                        //    classeBigBoss=typeElement.getInterfaces().get(0).toString();
+
+                         //TypeElement testTE = (TypeElement) element;
+                         //System.out.println(classeBigBoss);
+
+                         texte += "{redefine::"/*+classeBigBoss*/+PumlDiagram.subStr( typeElement.getSuperclass().toString())+"."+PumlDiagram.subStr(methode.getSimpleName().toString()+"}");
                      }
                  }
+                 //pour override
+                //get annotation
+                //GetAnnoation.getInterfaces().size()<0
+
+
 
 
                  texte+='\n';

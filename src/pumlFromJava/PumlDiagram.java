@@ -119,9 +119,11 @@ public class PumlDiagram implements Doclet
 
         //javadoc -private -sourcepath src -doclet pumlFromJava.PumlDiagram -docletpath out/production/P21Projet western --dca
 
+        //javadoc -private -sourcepath src -doclet pumlFromJava.PumlDiagram -docletpath out/production/P21Projet package_test --dca
+
         //+ option -d
         //Donc je choisis moi-même le chemin dans la méthode de création
-        toolProvider.run(System.out, System.err, args);
+        toolProvider.run(System.out, System.err, argument2);
 
     }
 
@@ -234,8 +236,53 @@ public class PumlDiagram implements Doclet
 
         //Dans certains cas, les noms sont entre < > (dans des listes, init, etc ...), et comme on garde tout après le dernier point, ce caractère peut rester
         //On va alors simplement l'enlever s'il y a ce caractère
-        if(retour.charAt(retour.length()-1)=='>')
+        if(retour.substring(retour.length()-1).equals(">"))
             retour=retour.substring(0,retour.length()-1);
+
+
+        return retour;
+    }
+    public static String subStrLiens(String nom)
+    {
+        String retour;
+
+        if(!nom.equals("")) {
+
+
+            int position = 0;
+            for (int i = 0; i < nom.length(); i++) {
+                if (nom.charAt(i) == '.') {
+                    position = i;
+                }
+            }
+
+            if (position == 0)
+                retour = nom;
+            else
+                retour = nom.substring(position + 1);
+
+            //Dans certains cas, les noms se terminent par < > [ ] (dans des listes, init, etc ...), et comme on garde tout après le dernier point, ce caractère peut rester
+            //On va alors simplement l'enlever s'il y a ce caractère
+            boolean erreur_out_of_range = false;
+            while (!erreur_out_of_range)
+            {
+                try {
+                    if (retour.charAt(retour.length()-1) == '>'|| retour.charAt(retour.length()-1) == '<' || retour.charAt(retour.length()-1) == ']' || retour.charAt(retour.length()-1)=='[')
+                    {
+                        retour = retour.substring(0, retour.length() - 1);
+                    }
+                    else
+                        erreur_out_of_range=true;
+
+
+                } catch (IndexOutOfBoundsException e) {
+                     erreur_out_of_range = true;
+                }
+        }
+
+        }
+        else
+            retour="";
 
         return retour;
     }
@@ -252,6 +299,66 @@ public class PumlDiagram implements Doclet
             }
         }
         return false;
+    }
+
+    public static String subStrParametres(String nom)
+    {
+        String retour;
+
+        if(!nom.equals("")) {
+
+
+            int position = 0;
+            for (int i = 0; i < nom.length(); i++) {
+                if (nom.charAt(i) == '.') {
+                    position = i;
+                }
+            }
+
+            if (position == 0)
+                retour = nom;
+            else
+                retour = nom.substring(position + 1);
+
+            //Dans certains cas, les noms se terminent par < > [ ] (dans des listes, init, etc ...), et comme on garde tout après le dernier point, ce caractère peut rester
+            //On va alors simplement l'enlever s'il y a ce caractère
+            boolean erreur_out_of_range = false;
+            int nbFleche=0;
+
+            for(int i=0;i<retour.length();i++)
+            {
+                if(retour.charAt(i)=='>')
+                    nbFleche++;
+            }
+
+            while (!erreur_out_of_range)
+            {
+                try
+                {
+                    if (retour.charAt(retour.length()-1) == '>')
+                    {
+                        retour = retour.substring(0, retour.length() - 1);
+                    }
+                    else
+                        erreur_out_of_range=true;
+
+
+                } catch (IndexOutOfBoundsException e) {
+                    erreur_out_of_range = true;
+                }
+            }
+
+            for(int i=0;i<nbFleche;i++)
+            {
+                retour=retour+"[*]";
+            }
+
+        }
+        else
+            retour="";
+
+
+        return retour;
     }
 
     //---Pour les options---

@@ -27,7 +27,7 @@ CLASS Personnage
 + boire()
 + getNom():String
 + getBoisson():Boisson
-+ {static} getPseudos(personnages:Nommable):String
++ {static} getPseudos(personnages:Nommable[*]):String
 + {static} getBoissonParDefaut():Boisson
 
 }
@@ -35,10 +35,10 @@ CLASS Narrateur
 {
 +  <<create>> Narrateur ()
 +  <<create>> Narrateur (nom:String)
-+ dire(texte:String){redefine::}dire
-+ boire(boisson:Boisson){redefine::}boire
-+ boire(){redefine::}boire
-+ getPseudo():String{redefine::}getPseudo
++ dire(texte:String){redefine::Personnage.dire}
++ boire(boisson:Boisson){redefine::Personnage.boire}
++ boire(){redefine::Personnage.boire}
++ getPseudo():String{redefine::Personnage.getPseudo}
 
 }
 INTERFACE Nommable<<interface>>
@@ -59,7 +59,7 @@ CLASS Substantif
 +  <<create>> Substantif (nom:String,genre:Genre)
 + getNom():String
 + getGenre():Genre
-+ toString():String{redefine::}toString
++ toString():String{redefine::Object.toString}
 + {static} isVowel(c:char):boolean
 + {static} startsWithVowel(s:String):boolean
 + getArticleIndefini():String
@@ -77,8 +77,8 @@ CLASS Substantif
 }
 ENUM Genre<<énumération>>
 {
-+ {static} {ReadOnly} FEMININ
-+ {static} {ReadOnly} MASCULIN
+FEMININ
+MASCULIN
 
 }
 CLASS Ripou
@@ -87,15 +87,15 @@ CLASS Ripou
 +  <<create>> Ripou (nom:String,boisson:Boisson)
 +  <<create>> Ripou (nom:String,boisson:Boisson,look:String)
 + getLook():String
-+ estLibre():boolean{redefine::}estLibre
-+ getRecompense():int{redefine::}getRecompense
-+ kidnapper(dame:Dame){redefine::}kidnapper
-+ getCaptives():Dame[*]{redefine::}getCaptives
-+ seFaireCapturer(cowBoy:Cowboy){redefine::}seFaireCapturer
-+ seFaireTirerDessus(cowBoy:Cowboy){redefine::}seFaireTirerDessus
-+ getPseudo():String{redefine::}getPseudo
-+ sePresenter(){redefine::}sePresenter
-+ liberer(dame:Dame){redefine::}liberer
++ estLibre():boolean{redefine::Cowboy.estLibre}
++ getRecompense():Integer{redefine::Cowboy.getRecompense}
++ kidnapper(dame:Dame){redefine::Cowboy.kidnapper}
++ getCaptives():Dame[*]{redefine::Cowboy.getCaptives}
++ seFaireCapturer(cowBoy:Cowboy){redefine::Cowboy.seFaireCapturer}
++ seFaireTirerDessus(cowBoy:Cowboy){redefine::Cowboy.seFaireTirerDessus}
++ getPseudo():String{redefine::Cowboy.getPseudo}
++ sePresenter(){redefine::Cowboy.sePresenter}
++ liberer(dame:Dame){redefine::Cowboy.liberer}
 
 }
 CLASS Brigand
@@ -108,14 +108,14 @@ CLASS Brigand
 +  <<create>> Brigand (nom:String,boisson:Boisson)
 +  <<create>> Brigand (nom:String,boisson:Boisson,look:String)
 + getLook():String
-+ getRecompense():int
++ getRecompense():Integer
 + estLibre():boolean
 + kidnapper(dame:Dame)
 + seFaireCapturer(cowBoy:Cowboy)
 + seFaireTirerDessus(cowBoy:Cowboy)
-+ getPseudo():String{redefine::}getPseudo
++ getPseudo():String{redefine::Personnage.getPseudo}
 + getCaptives():Dame[*]
-+ sePresenter(){redefine::}sePresenter
++ sePresenter(){redefine::Personnage.sePresenter}
 + {static} getBoissonParDefaut():Boisson
 + {static} setBoissonParDefaut(boisson:Boisson)
 
@@ -125,12 +125,12 @@ CLASS Cowboy
 - gains:Integer 
 +  <<create>> Cowboy (nom:String)
 +  <<create>> Cowboy (nom:String,boisson:Boisson)
-+ getPseudo():String{redefine::}getPseudo
++ getPseudo():String{redefine::Personnage.getPseudo}
 + liberer(dame:Dame)
-+ liberer(captives:Dame)
++ liberer(captives:Dame[*])
 + capturer(horsLaLoi:HorsLaLoi)
 + tirerSur(brigand:HorsLaLoi)
-+ sePresenter(){redefine::}sePresenter
++ sePresenter(){redefine::Personnage.sePresenter}
 + {static} getBoissonParDefaut():Boisson
 + {static} setBoissonParDefaut(boisson:Boisson)
 
@@ -140,11 +140,11 @@ CLASS Dame
 - estLibre:boolean 
 +  <<create>> Dame (nom:String)
 +  <<create>> Dame (nom:String,boisson:Boisson)
-+ getPseudo():String{redefine::}getPseudo
++ getPseudo():String{redefine::Personnage.getPseudo}
 + seFaireKidnapper(horsLaLoi:HorsLaLoi)
 + seFaireLiberer(cowBoy:Cowboy)
 + estLibre():boolean
-+ sePresenter(){redefine::}sePresenter
++ sePresenter(){redefine::Personnage.sePresenter}
 + {static} getBoissonParDefaut():Boisson
 + {static} setBoissonParDefaut(boisson:Boisson)
 + getRavisseur():HorsLaLoi
@@ -153,7 +153,7 @@ CLASS Dame
 INTERFACE HorsLaLoi<<interface>>
 {
 + {abstract}estLibre():boolean
-+ {abstract}getRecompense():int
++ {abstract}getRecompense():Integer
 + {abstract}kidnapper(dame:Dame)
 + {abstract}seFaireCapturer(cowBoy:Cowboy)
 + {abstract}seFaireTirerDessus(cowBoy:Cowboy)
@@ -180,32 +180,32 @@ Personnage <|--- Cowboy
 
 Personnage <|--- Dame
 
-Boisson --- Substantif : substantif
+Boisson "0..1" ---> "0..1" Substantif : substantif >
 
-Boisson --- Boisson : EAU
+Boisson "0..1" ---> "0..1" Boisson : EAU >
 
-Personnage --- Boisson : BOISSON_PAR_DEFAUT
+Personnage "0..1" ---> "0..1" Boisson : BOISSON_PAR_DEFAUT >
 
-Personnage --- Boisson : boisson
+Personnage "0..1" ---> "0..1" Boisson : boisson >
 
-Substantif --- Genre : genre
+Substantif "0..1" ---> "0..1" Genre : genre >
 
-Ripou --- Brigand : brigand
+Ripou "0..1" ---> "0..1" Brigand : brigand >
 
-Brigand --- Dame : captives
+Brigand "*" ---> "0..1" Dame : captives >
 
-Brigand --- Cowboy : gardien
+Brigand "0..1" ---> "0..1" Cowboy : gardien >
 
-Brigand --- Boisson : boissonParDefaut
+Brigand "0..1" ---> "0..1" Boisson : boissonParDefaut >
 
-Cowboy --- HorsLaLoi : captures
+Cowboy "*" ---> "0..1" HorsLaLoi : captures >
 
-Cowboy --- Boisson : boissonParDefaut
+Cowboy "0..1" ---> "0..1" Boisson : boissonParDefaut >
 
-Dame --- Cowboy : sauveur
+Dame "0..1" ---> "0..1" Cowboy : sauveur >
 
-Dame --- HorsLaLoi : ravisseur
+Dame "0..1" ---> "0..1" HorsLaLoi : ravisseur >
 
-Dame --- Boisson : boissonParDefaut
+Dame "0..1" ---> "0..1" Boisson : boissonParDefaut >
 }
 @enduml

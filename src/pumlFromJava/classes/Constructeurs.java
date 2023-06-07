@@ -16,7 +16,7 @@ public class Constructeurs
         //On a 2 éléments
         //Le grand élément est la classe
         this.grandElement=grandElement;
-        //Le petit est le constructeur (on fait une vérification dans la classe PumlDiagramm pour savoir si c'est un constructeur)
+        //Le petit est le constructeur (on fait une vérification dans la classe DCC pour savoir si c'est un constructeur)
         this.petitElement=petitElement;
     }
 

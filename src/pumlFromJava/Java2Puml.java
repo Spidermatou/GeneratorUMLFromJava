@@ -28,7 +28,7 @@ public class Java2Puml
         //ou avec un chemin absolu pour ne pas etre obliger d'etre dans le dossier
         //javadoc -private -sourcepath /home/matteo.renaud/Documents/Université/1ère_Année/SAE/SAE_P21/P21_Projet/p-21-projet-renaud-matteo-gillig-matteo-tp-4/src -doclet pumlFromJava.FirstDoclet -docletpath /home/matteo.renaud/Documents/Université/1ère_Année/SAE/SAE_P21/P21_Projet/p-21-projet-renaud-matteo-gillig-matteo-tp-4/out/production/p-21-projet-renaud-matteo-gillig-matteo-tp-4 western
 
-        //Un tableau créer avec les arguments (sur machine de Mattéo RENAUD)
+        //Un tableau créer avec les arguments
         String[] argument = {"-private", "-sourcepath", "src", "-doclet", "pumlFromJava.FirstDoclet", "-docletpath", "out/production/p-21-projet-renaud-matteo-gillig-matteo-tp-4", "western"};
         toolProvider.run(System.out, System.err, argument);
     }

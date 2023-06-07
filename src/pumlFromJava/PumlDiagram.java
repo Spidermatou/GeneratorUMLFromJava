@@ -20,29 +20,58 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.spi.ToolProvider;
 
 //La classe implémente bien le Doclet pour avoir les méthodes et le fonctionnement
 public class PumlDiagram implements Doclet
 {
+    //3 bouléens pour savoir s'il à mis l'extension --dca ou --d ou --out
+    private boolean veutDCA;
+    private boolean aMisExtensionTiretD;
+    private boolean aChoisisUnNomPourLeFichier;
+    //2 chaînes de caractères qui stockeront le paramêtre de l'extension --d ou --out (si elles sont dans la commande)
+    private String cheminDeLExtensionTiretD;
+    private String nomDuFichier;
 
-    //Je mets un reporter et un locale
-    private Reporter reporter;
-    private Locale locale;
+    Reporter reporter;
+    Locale locale;
 
     //Je prévois un constructeur public et sans arguments
     public PumlDiagram()
     {
-        //Vide
-        veutDCC=true;
         veutDCA=false;
+        aMisExtensionTiretD=false;
+        aChoisisUnNomPourLeFichier=false;
+        cheminDeLExtensionTiretD="";
+        nomDuFichier="";
+    }
+
+    //Le main
+    public static void main(String[] args)
+    {
+        ToolProvider toolProvider = ToolProvider.findFirst("javadoc").get();
+        System.out.println(toolProvider.name());
+
+        //Les tableaux d'arguments (pour exécuter dans l'IDE)
+        String []argument=new String[] {"-private","-sourcepath", "src", "-doclet",
+                "pumlFromJava.PumlDiagram", "-docletpath", "out/production/p-21-projet-renaud-matteo-gillig-matteo-tp-4", "western"};
+        String []argument2=new String[] {"-private","-sourcepath", "src", "-doclet",
+                "pumlFromJava.PumlDiagram", "-docletpath", "out/production/p-21-projet-renaud-matteo-gillig-matteo-tp-4", "western","--dca"};
+
+        //Les commandes (pour exécuter dans le terminal)
+        //javadoc -private -sourcepath src -doclet pumlFromJava.PumlDiagram -docletpath out/production/P21Projet western --dca
+        //javadoc -private -sourcepath src -doclet pumlFromJava.PumlDiagram -docletpath out/production/P21Projet package_test --dca
+
+        toolProvider.run(System.out, System.err, args);
     }
 
     @Override
     public void init(Locale locale, Reporter reporter)
     {
-        //Je met le Reporter et le Locale
         this.reporter=reporter;
         this.locale=locale;
     }
@@ -89,13 +118,6 @@ public class PumlDiagram implements Doclet
     }
 
     /*
-    @Override
-    public Set<? extends Option> getSupportedOptions() {
-        // This doclet does not support any options.
-        return Collections.emptySet();
-    }*/
-
-    /*
     Reporters
     The preceding examples just write directly to System.out.
     Using a Reporter, you can generate messages that are associated with an element or a position in a documentation comment.
@@ -103,79 +125,116 @@ public class PumlDiagram implements Doclet
     The following example uses the reporter to report the kind of the elements specified on the command line.
      */
 
-    public static void main(String[] args)
-    {
-        ToolProvider toolProvider = ToolProvider.findFirst("javadoc").get();
-        System.out.println(toolProvider.name());
 
-        //Le tableau d'arguments
-        String []argument=new String[] {"-private","-sourcepath", "src", "-doclet",
-                "pumlFromJava.PumlDiagram", "-docletpath", "out/production/p-21-projet-renaud-matteo-gillig-matteo-tp-4", "western"};
-        String []argument2=new String[] {"-private","-sourcepath", "src", "-doclet",
-                "pumlFromJava.PumlDiagram", "-docletpath", "out/production/p-21-projet-renaud-matteo-gillig-matteo-tp-4", "western","--dca"};
-
-
-        //veutDCA=voirSiVeutDCA(args);
-
-        //javadoc -private -sourcepath src -doclet pumlFromJava.PumlDiagram -docletpath out/production/P21Projet western --dca
-
-        //javadoc -private -sourcepath src -doclet pumlFromJava.PumlDiagram -docletpath out/production/P21Projet package_test --dca
-
-        //+ option -d
-        //Donc je choisis moi-même le chemin dans la méthode de création
-        toolProvider.run(System.out, System.err, argument2);
-
-    }
-
-    private static boolean veutDCC;
-    private static boolean veutDCA;
-
+    //La méthode de création
     public void creation(Element element)
     {
-        if(veutDCC)
-        {
-            //Je choisis moi-même le chemin vers le fichier
-            String cheminVersDCC = "DCCGenere.puml";
 
-            //Créer ficher
+        //Les chemins vers les 2 fichiers
+        String cheminVersDCA ;
+        String cheminVersDCC ;
+
+        //S'il a choisis l'option --d et --out
+        if(aMisExtensionTiretD&&aChoisisUnNomPourLeFichier)
+        {
+            cheminVersDCC=cheminDeLExtensionTiretD+"/"+nomDuFichier+"_DCC.puml";
+            cheminVersDCA=cheminDeLExtensionTiretD+"/"+nomDuFichier+"_DCA.puml";
+        }
+        //Sinon, s'il n'a que choisis l'option --d
+        else if(aMisExtensionTiretD)
+        {
+            cheminVersDCC=cheminDeLExtensionTiretD+"/"+"DCCGenere.puml";
+            cheminVersDCA=cheminDeLExtensionTiretD+"/"+"DCAGenere.puml";
+        }
+        //Sinon, s'il n'a que choisis l'option --out
+        else if(aChoisisUnNomPourLeFichier)
+        {
+            cheminVersDCC=nomDuFichier+"_DCC.puml";
+            cheminVersDCA=nomDuFichier+"_DCA.puml";
+        }
+        //Sinon, si aucune option
+        else
+        {
+            cheminVersDCC="DCCGenere.puml";
+            cheminVersDCA="DCAGenere.puml";
+        }
+
+
+        //S'il à mis l'option --d (je vais créer le repertoire)
+        if(aMisExtensionTiretD)
+        {
             try
             {
-                File fichier = new File(cheminVersDCC);
-                if (fichier.createNewFile())
+                Path dirPath = Paths.get(cheminDeLExtensionTiretD);
+
+                //Si le repertoire n'existe pas
+                if (!Files.exists(dirPath))
                 {
-                    System.out.println("Fichier créer : " + fichier.getName());
+                    //Je créer le repertoire
+                    Files.createDirectory(dirPath);
+
+                    //Je regarde si maintenant ce repertoire existe a affiche un message
+                    if(Files.exists(dirPath))
+                        System.out.println("Le dossier a été créer : "+dirPath.getFileName());
                 }
                 else
                 {
-                    System.out.println("Le fichier existe dèjà.");
+                    System.out.println("Le dossier existe déjà.");
                 }
             }
-            catch (IOException e) {
-                System.out.println("Erreur de création.");
-                e.printStackTrace();
-            }
-            //Ecriture
-            try
+            catch (IOException e)
             {
-                FileWriter myWriter = new FileWriter(cheminVersDCC);
-
-                DCC dcc = new DCC(element, myWriter);
-                dcc.creerDCC();
-
-                myWriter.close();
-
-                System.out.println("Fin de l'écriture.");
-            }
-            catch (IOException e) {
-                System.out.println("Erreur d'écriture.");
+                System.out.println("Erreur : Impossible de créer le dossier.");
                 e.printStackTrace();
             }
         }
 
+        //---------------------Création du DCC et DCA---------------------
+
+        //Le DCC
+        //Créer ficher
+        try
+        {
+            File fichier = new File(cheminVersDCC);
+
+            if (fichier.createNewFile())
+            {
+                System.out.println("Fichier créer : " + fichier.getName());
+            }
+            else
+            {
+                System.out.println("Le fichier existe dèjà.");
+            }
+        }
+        catch (IOException e)
+        {
+            System.out.println("Erreur de création.");
+            e.printStackTrace();
+        }
+
+        //Ecriture
+        try
+        {
+            FileWriter myWriter = new FileWriter(cheminVersDCC);
+
+            //Je crée un objet DCC en lui donnant en paramêtre le package et l'objet d'écriture
+            DCC dcc = new DCC(element, myWriter);
+            dcc.creerDCC();
+
+            myWriter.close();
+            System.out.println("Fin de l'écriture.");
+        }
+        catch (IOException e)
+        {
+            System.out.println("Erreur d'écriture.");
+            e.printStackTrace();
+        }
+
+
+        //Le DCA
+        //S'il veut le DCA (avec l'option --dca)
         if(veutDCA)
         {
-            //Je choisis moi-même le chemin vers le fichier
-            String cheminVersDCA = "DCAGenere.puml";
             //Créer ficher
             try
             {
@@ -199,11 +258,11 @@ public class PumlDiagram implements Doclet
             {
                 FileWriter myWriter = new FileWriter(cheminVersDCA);
 
+                //Comme pour le DCC , je crée un objet DCA en lui donnant en paramêtre le package et l'objet d'écriture
                 DCA dca = new DCA(element, myWriter);
                 dca.creerDCA();
 
                 myWriter.close();
-
                 System.out.println("Fin de l'écriture.");
             }
             catch (IOException e)
@@ -215,7 +274,7 @@ public class PumlDiagram implements Doclet
     }
 
     //Méthode maison pour enlever le nom des package avant
-    //Car quand on écrit le nom (avec la méthode getSimpleName()), on obtient par exemple java.western.Boisson
+    //Car quand on écrit le nom (avec exemple, la méthode getSimpleName()), on obtient par exemple java.western.Boisson
     //Donc ce qu'on va faire, c'est que l'on va juste garder la dernière partie (après le dernier point)
     public static String subStr(String nom)
     {
@@ -239,19 +298,22 @@ public class PumlDiagram implements Doclet
         if(retour.substring(retour.length()-1).equals(">"))
             retour=retour.substring(0,retour.length()-1);
 
-
         return retour;
     }
+
+    //Une autres méthode maisons qui s'assurent qu'il n'y a pas de < > [ ] à la fin d'une chaîne de caractères
     public static String subStrLiens(String nom)
     {
         String retour;
 
-        if(!nom.equals("")) {
-
-
+        if(!nom.equals(""))
+        {
+            //Comme la méthode subStr
             int position = 0;
-            for (int i = 0; i < nom.length(); i++) {
-                if (nom.charAt(i) == '.') {
+            for (int i = 0; i < nom.length(); i++)
+            {
+                if (nom.charAt(i) == '.')
+                {
                     position = i;
                 }
             }
@@ -261,12 +323,12 @@ public class PumlDiagram implements Doclet
             else
                 retour = nom.substring(position + 1);
 
-            //Dans certains cas, les noms se terminent par < > [ ] (dans des listes, init, etc ...), et comme on garde tout après le dernier point, ce caractère peut rester
-            //On va alors simplement l'enlever s'il y a ce caractère
+            //On va ici enlever tous les caractères indésirables à la fin
             boolean erreur_out_of_range = false;
             while (!erreur_out_of_range)
             {
-                try {
+                try
+                {
                     if (retour.charAt(retour.length()-1) == '>'|| retour.charAt(retour.length()-1) == '<' || retour.charAt(retour.length()-1) == ']' || retour.charAt(retour.length()-1)=='[')
                     {
                         retour = retour.substring(0, retour.length() - 1);
@@ -275,11 +337,12 @@ public class PumlDiagram implements Doclet
                         erreur_out_of_range=true;
 
 
-                } catch (IndexOutOfBoundsException e) {
+                }
+                catch (IndexOutOfBoundsException e)
+                {
                      erreur_out_of_range = true;
                 }
-        }
-
+             }
         }
         else
             retour="";
@@ -287,19 +350,6 @@ public class PumlDiagram implements Doclet
         return retour;
     }
 
-    public static boolean voirSiVeutDCA(List<String> argument)
-    {
-        for(int i=0;i<argument.size();i++)
-        {
-            System.out.println(argument.get(i));
-
-            if(argument.get(i).toLowerCase().contains("--dca"))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
 
     public static String subStrParametres(String nom)
     {
@@ -361,11 +411,106 @@ public class PumlDiagram implements Doclet
         return retour;
     }
 
-    //---Pour les options---
+
+    //------Pour les options-----
+    //On a rajouté 3 options en plus pour la commande :
+    // --d : le repetoire où il veut mettre les diagrammes
+    // -out : le nom des diagrammes
+    // --dca : s'il veut le DCA avec
 
     @Override
-    public Set<? extends Option> getSupportedOptions() {
+    public Set<? extends Option> getSupportedOptions()
+    {
         Option[] options = {
+               //1ère option --d
+                new Option() {
+                    private final List<String> someOption = Arrays.asList(
+                            "--d"
+                    );
+
+                    @Override
+                    public int getArgumentCount() {
+                        return 1;
+                    }
+
+                    @Override
+                    public String getDescription() {
+                        return "Chemin vers le fichier pour le DCC";
+                    }
+
+                    @Override
+                    public Option.Kind getKind() {
+                        return Kind.STANDARD;
+                    }
+
+                    @Override
+                    public List<String> getNames() {
+                        return someOption;
+                    }
+
+                    @Override
+                    public String getParameters() {
+                        return "--d";
+                    }
+
+                    @Override
+                    public boolean process(String opt, List<String> arguments)
+                    {
+                        aMisExtensionTiretD=true;
+                        cheminDeLExtensionTiretD=arguments.get(0);
+                        return true;
+                    }
+                },
+                //2ème option --out
+                new Option() {
+                    private final List<String> someOption = Arrays.asList(
+                            "--out"
+                    );
+
+                    @Override
+                    public int getArgumentCount() {
+                        return 1;
+                    }
+
+                    @Override
+                    public String getDescription() {
+                        return "Mise en place du nom du fichier pour le DCC (Pas besoin de spécifier l'extension .puml)";
+                    }
+
+                    @Override
+                    public Option.Kind getKind() {
+                        return Kind.STANDARD;
+                    }
+
+                    @Override
+                    public List<String> getNames() {
+                        return someOption;
+                    }
+
+                    @Override
+                    public String getParameters() {
+                        return "--out";
+                    }
+
+                    @Override
+                    public boolean process(String opt, List<String> arguments)
+                    {
+                        if(!arguments.get(0).equals(""))
+                        {
+                            aChoisisUnNomPourLeFichier = true;
+                            nomDuFichier = arguments.get(0);
+
+                            if(nomDuFichier.substring(nomDuFichier.length()-5).equals(".puml"))
+                            {
+                                nomDuFichier=nomDuFichier.substring(0,nomDuFichier.length()-5);
+                            }
+
+                            return true;
+                        }
+                        return false;
+                    }
+                },
+                //3ème option --dca
                 new Option() {
                     private final List<String> someOption = Arrays.asList(
                             "--dca"
@@ -403,6 +548,7 @@ public class PumlDiagram implements Doclet
                         return true;
                     }
                 }
+
         };
         return new HashSet<>(Arrays.asList(options));
     }

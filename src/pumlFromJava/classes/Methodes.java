@@ -20,6 +20,7 @@ public class Methodes
 
     public Methodes(Element element)
     {
+        //L'élément ici est la classe ou l'interface
         this.element=element;
     }
 
@@ -27,20 +28,25 @@ public class Methodes
     {
         String texte="";
 
+        //Je parcours chaque élément de la classe ou de l'interface
         for(Element methode:element.getEnclosedElements())
         {
+            //Si c'est une méthode
             if(methode.getKind()== ElementKind.METHOD)
             {
+                //Je récupere les modificateurs de la méthode
                 Modificateurs recupModif = new Modificateurs(methode);
                 texte += recupModif.obtenirLesModificateurs();
 
+                //J'ouvre une parenthèse pour les paramêtre
                 texte += methode.getSimpleName()+"(";
                 int i=0;
 
-                 ExecutableElement ee=(ExecutableElement)methode;
-                 List<? extends  VariableElement> lst=ee.getParameters();
-                 for(VariableElement ve:lst)
-                 {
+                //Je récupère le nom des paramêtre et leurs types
+                ExecutableElement ee=(ExecutableElement)methode;
+                List<? extends  VariableElement> lst=ee.getParameters();
+                for(VariableElement ve:lst)
+                {
                      if(i!=0)
                          texte+=",";
 
@@ -58,10 +64,8 @@ public class Methodes
                      i++;
                  }
 
-
-
                 //----Pour le type de retour----
-                //Si c'est un Void
+                //Si c'est un VOID
                 if((((ExecutableElement) methode).getReturnType().getKind() == TypeKind.VOID))
                 {
                     texte+=")";
@@ -69,7 +73,7 @@ public class Methodes
                 //Sinon, pour les autres types de retour
                 else
                 {
-                    //INT
+                    //Si c'est un INT
                     if(((ExecutableElement) methode).getReturnType().getKind() == TypeKind.INT)
                     {
                         texte+="):Integer";
@@ -84,28 +88,23 @@ public class Methodes
                     {
                         texte += "):" + PumlDiagram.subStr(((ExecutableElement) methode).getReturnType().toString()) ;
                     }
-
-
-                     //En fait on peut savoir le type avec l'énumération TypeKind
-                     //c mieux que des susbstring et equal un peu tkt
-                     //if ((((ExecutableElement) methode).getReturnType().getKind() == TypeKind.BOOLEAN))
-                         //System.out.println(((ExecutableElement) methode).getReturnType().getKind());
                  }
 
-                 //On teste si la méthode est override
-                 List<? extends AnnotationMirror> anno = methode.getAnnotationMirrors();
-                 for(AnnotationMirror an : anno)
-                 {
+                //-----Partie Override----
+                //On teste si la méthode est override
+                List<? extends AnnotationMirror> anno = methode.getAnnotationMirrors();
+                for(AnnotationMirror an : anno)
+                {
                      //si la methode est override on ajoute redefine au texte de la methode
 
                      //petit probeleme avec interface et heritage tout ca tu connais
                      String classeBigBoss="";
                      TypeElement typeElement = (TypeElement) methode.getEnclosingElement();
                      TypeMirror heritageSilYA = typeElement.getSuperclass();
+
+                     //S'il y a un Override
                      if(an.toString().equals("@java.lang.Override"))
                      {
-
-
 
                          //   if(typeElement.getAnnotation(methode.))
                          //       classeBigBoss=typeElement.getSuperclass().toString();
@@ -115,39 +114,22 @@ public class Methodes
                          //TypeElement testTE = (TypeElement) element;
                          //System.out.println(classeBigBoss);
 
+                         //Petit problème car getSuperClasse renvoie la classe hériter (et ce n'est pas forcement la meme chose pour les methodes)
                          texte += "{redefine::"/*+classeBigBoss*/+PumlDiagram.subStr( typeElement.getSuperclass().toString())+"."+PumlDiagram.subStr(methode.getSimpleName().toString()+"}");
                      }
                  }
-                 //pour override
+                //pour override
                 //get annotation
                 //GetAnnoation.getInterfaces().size()<0
 
-
-
-
                  texte+='\n';
             }
-
         }
 
         return texte;
     }
 
-    public boolean regardeSiVoidALaFin(String txt)
-    {
-        boolean res=false;
-        if(txt.length()>=4)
-        {
-            if (txt.substring(txt.length() - 4).equals("void"))
-            {
-                res = true;
-            }
-        }
-
-
-        return res;
-    }
-
+    //Une méthode qui ajoute l'écriture d'une liste en UML
     public static String parameterList(String texte)
     {
         return texte += "[*]";

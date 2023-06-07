@@ -69,5 +69,4 @@ public class Attributs
        }
         return attributs;
     }
-
 }

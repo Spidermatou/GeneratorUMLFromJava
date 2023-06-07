@@ -33,7 +33,7 @@ public class Heritages
                 TypeMirror heritageSilYA = typeElement.getSuperclass();
 
                 //Donc s'il y a un héritage et que ce n'est pas une énumération
-                if (heritageSilYA.toString() != "none" && e.getKind() != ElementKind.ENUM)
+                if (!heritageSilYA.toString().equals("none") && e.getKind() != ElementKind.ENUM)
                 {
                     //Et que l'héritage n'est pas la classe Object
                     if (!heritageSilYA.toString().equals("java.lang.Object"))

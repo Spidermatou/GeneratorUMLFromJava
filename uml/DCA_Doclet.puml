@@ -12,8 +12,13 @@ package jdk-javadoc.doclet
    interface Doclet <<interface>>
    'An encapsulation of option name, aliases, parameters and descriptions as used by the Doclet.
    interface Doclet.Option <<interface>>
-   'The kind of an option.
+   'The kind of an option
    enum Doclet.Option.Kind <<enumération>>
+   {
+      EXTENDED
+      OTHER
+      STANDARD
+   }
    'This doclet generates HTML-formatted documentation for the specified modules, packages and types.
    class StandardDoclet implements Doclet
    'Interface for reporting diagnostics and other messages.
@@ -22,13 +27,67 @@ package jdk-javadoc.doclet
    interface DocletEnvironnment <<interface>>
    'The mode specifying the level of detail of module documentation.
    enum DocletEnvironment_ModuleMode <<enumération>>
+   {
+       ALL
+       API
+   }
    'The interface for a custom taglet supported by doclets such as the standard doclet.
    interface Taglet <<interface>>
    'The kind of location in which a tag may be used.
    enum Taglet.Location <<enumération>>
+   {
+        CONSTRUCTOR
+        FIELD
+        METHOD
+        MODULE
+        OVERVIEW
+        PACKAGE
+        TYPE
+   }
 }
 
-interface ToolProvider <<interface>>
+package java.util.spi
+{
+     interface ToolProvider <<interface>>
+     {
+     }
+
+    interface ResourceBundleProvider <<interface>>
+    {
+    }
+
+    interface ResourceBundleControlProvider <<interface>>
+    {
+    }
+
+    class AbstractResourceBundleProvider
+    {
+    }
+
+    class CalendarDataProvider
+    {
+   }
+
+    class CalendarNameProvider
+    {
+    }
+
+    class CurrencyNameProvider
+    {
+    }
+
+    class LocaleNameProvider
+    {
+    }
+
+    class LocaleServiceProvider
+    {
+    }
+
+    class TimeZoneNameProvider
+    {
+    }
+}
 
 Doclet -- Doclet.Option:<<use>>
 Doclet.Option -- "Doclet.Option.Kind":<<use>>
@@ -36,5 +95,12 @@ StandardDoclet -- Reporter:<<use>>
 StandardDoclet -- Doclet.Option:<<use>>
 Taglet -- Taglet.Location:<<use>>
 DocletEnvironnment -- DocletEnvironment_ModuleMode:<<use>>
+
+ResourceBundleProvider <|.. AbstractResourceBundleProvider
+LocaleServiceProvider <|-- CalendarNameProvider
+CurrencyNameProvider <|-- LocaleServiceProvider
+LocaleNameProvider <|-- LocaleServiceProvider
+TimeZoneNameProvider <|-- LocaleServiceProvider
+CalendarDataProvider <|-- LocaleServiceProvider
 
 @enduml

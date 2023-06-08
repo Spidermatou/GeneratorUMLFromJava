@@ -64,6 +64,7 @@ public class PumlDiagram implements Doclet
 
         //Les commandes (pour exécuter dans le terminal)
         //javadoc -private -sourcepath src -doclet pumlFromJava.PumlDiagram -docletpath out/production/P21Projet western --dca
+        //javadoc -private -sourcepath src -doclet pumlFromJava.PumlDiagram -docletpath out/production/P21Projet western --dca --d repertoire_destination --out mes_diagrammes
         //javadoc -private -sourcepath src -doclet pumlFromJava.PumlDiagram -docletpath out/production/P21Projet package_test --dca
 
         toolProvider.run(System.out, System.err, args);
@@ -129,7 +130,6 @@ public class PumlDiagram implements Doclet
     //La méthode de création
     public void creation(Element element)
     {
-
         //Les chemins vers les 2 fichiers
         String cheminVersDCA ;
         String cheminVersDCC ;
@@ -334,9 +334,9 @@ public class PumlDiagram implements Doclet
                         retour = retour.substring(0, retour.length() - 1);
                     }
                     else
+                    {
                         erreur_out_of_range=true;
-
-
+                    }
                 }
                 catch (IndexOutOfBoundsException e)
                 {
@@ -350,14 +350,24 @@ public class PumlDiagram implements Doclet
         return retour;
     }
 
-
+    //La méthode pour les type de paramêtres et de retour qui va faire :
+    // - si on a une ou 0 liste (on va enlever le nom des packages avant et rajouter [*])
+    // - sinon (si on a plus de 1 liste), on va tous garder (car on ne sait pas comment écrire en UML quand on a plusieurs listes)
     public static String subStrParametres(String nom)
     {
-        String retour;
+        String retour="";
 
-        if(!nom.equals("")) {
+        int nbFleche=0;
 
+        for(int i=0;i<nom.length();i++)
+        {
+            if(nom.charAt(i)=='>')
+                nbFleche++;
+        }
 
+        //Si on a plus de moins que 2 listes
+        if(nbFleche<2)
+        {
             int position = 0;
             for (int i = 0; i < nom.length(); i++) {
                 if (nom.charAt(i) == '.') {
@@ -372,41 +382,22 @@ public class PumlDiagram implements Doclet
 
             //Dans certains cas, les noms se terminent par < > [ ] (dans des listes, init, etc ...), et comme on garde tout après le dernier point, ce caractère peut rester
             //On va alors simplement l'enlever s'il y a ce caractère
-            boolean erreur_out_of_range = false;
-            int nbFleche=0;
-
-            for(int i=0;i<retour.length();i++)
-            {
-                if(retour.charAt(i)=='>')
-                    nbFleche++;
-            }
-
-            while (!erreur_out_of_range)
-            {
-                try
-                {
-                    if (retour.charAt(retour.length()-1) == '>')
-                    {
-                        retour = retour.substring(0, retour.length() - 1);
-                    }
-                    else
-                        erreur_out_of_range=true;
-
-
-                } catch (IndexOutOfBoundsException e) {
-                    erreur_out_of_range = true;
-                }
-            }
-
-            for(int i=0;i<nbFleche;i++)
-            {
-                retour=retour+"[*]";
-            }
-
+            if(retour.substring(retour.length()-1).equals(">"))
+                retour=retour.substring(0,retour.length()-1);
         }
+        //Sinon, on garde tous et on enlève juste le nom de certains package
         else
-            retour="";
-
+        {
+            //On va enlever les java.util avant
+            retour=nom;
+            //Technique pour enlever le nom de certains package
+            //(Pour que ce soit juste plus lisible)
+            //C'est très subljectif (car je choisis les packages qu'on a le plus)
+            retour=retour.replace("java.","");
+            retour=retour.replace("util.","");
+            retour=retour.replace("Map.","");
+            retour=retour.replace("lang.","");
+        }
 
         return retour;
     }
@@ -415,7 +406,7 @@ public class PumlDiagram implements Doclet
     //------Pour les options-----
     //On a rajouté 3 options en plus pour la commande :
     // --d : le repetoire où il veut mettre les diagrammes
-    // -out : le nom des diagrammes
+    // --out : le nom des diagrammes
     // --dca : s'il veut le DCA avec
 
     @Override

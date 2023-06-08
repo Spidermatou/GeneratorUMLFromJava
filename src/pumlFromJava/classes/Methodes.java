@@ -78,7 +78,7 @@ public class Methodes
                     {
                         texte+="):Integer";
                     }
-                    //Pour les liste (je regarde le dernier caractère (si c'est un '>'))
+                    //Pour les listes (je regarde le dernier caractère (si c'est un '>'))
                     else if (((ExecutableElement) methode).getReturnType().toString().charAt(((ExecutableElement) methode).getReturnType().toString().length()-1)=='>')
                     {
                         texte += "):" + parameterList( PumlDiagram.subStrParametres( ((ExecutableElement) methode).getReturnType().toString() )) ;
@@ -97,7 +97,7 @@ public class Methodes
                 List<? extends AnnotationMirror> anno = methode.getAnnotationMirrors();
                 for(AnnotationMirror an : anno)
                 {
-                     //Si la methode est override on ajoute redefine au texte de la methode
+                     //Si la méthode est override, on ajoute redefine au texte de la methode
 
                      String classeBigBoss="";
                      TypeElement typeElement = (TypeElement) methode.getEnclosingElement();
@@ -107,19 +107,19 @@ public class Methodes
                      //S'il y a un Override
                      if(an.toString().equals("@java.lang.Override"))
                      {
-                         //Si la classe n'a pas d'interface implémenter
+                         //Si la classe n'a pas d'interface implémentée
                          if(typeElement.getInterfaces().isEmpty())
                          {
-                             //Alors elle a forcément que 1 seule classe hériter
+                             //Alors elle n'a forcément que 1 seule classe héritée
                              //(une seule est possible en java, car il n'y a que des héritages simples)
                              classeBigBoss=PumlDiagram.subStr(heritageSilYA.toString());
                          }
-                         //Sinon donc elle peut implementer des interfaces ou avoir une classe mère
+                         //Sinon, elle peut implémenter des interfaces ou avoir une classe mère
                          else if (!typeElement.getInterfaces().isEmpty())
                          {
                              //System.out.println(((DeclaredType)typeElement.getInterfaces().get(0)).asElement());
 
-                             //Mais il y a une problème, car il ne prendra forcément que soit une classe mère ou soit une interface pour tous les Override
+                             //Mais il y a un problème, car il ne prendra forcément que soit une classe mère ou soit une interface pour tous les Override
                              //Or, les méthodes peuvent redéfinir des méthodes de classes et/ou d'interfaces
                              //Si elle n'a pas de classe mère
                              if(((TypeElement) methode.getEnclosingElement()).getSuperclass().toString().equals("none"))
@@ -129,7 +129,7 @@ public class Methodes
                                  classeBigBoss=PumlDiagram.subStr(heritageSilYA.toString());
                          }
 
-                         //Petit problème car getSuperClasse renvoie la classe hériter (et ce n'est pas forcement la meme chose pour les methodes (elle peuvent redefines soit une méthode d'interface ou de classe mère)
+                         //Petit problème car getSuperClasse renvoie la classe hériter (et ce n'est pas forcement la même chose pour les méthodes (elle peuvent redéfinir soit une méthode d'interface ou de classe mère))
                          texte += "{redefine::"+classeBigBoss/*+PumlDiagram.subStr( typeElement.getSuperclass().toString())*/+"."+PumlDiagram.subStr(methode.getSimpleName().toString()+"}");
                      }
                  }

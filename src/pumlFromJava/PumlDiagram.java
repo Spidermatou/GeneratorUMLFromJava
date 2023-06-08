@@ -29,7 +29,7 @@ import java.util.spi.ToolProvider;
 //La classe implémente bien le Doclet pour avoir les méthodes et le fonctionnement
 public class PumlDiagram implements Doclet
 {
-    //3 bouléens pour savoir s'il à mis l'extension --dca ou --d ou --out
+    //3 bouléens pour savoir si l'utilisateur a mis l'extension --dca ou --d ou --out
     private boolean veutDCA;
     private boolean aMisExtensionTiretD;
     private boolean aChoisisUnNomPourLeFichier;
@@ -134,19 +134,19 @@ public class PumlDiagram implements Doclet
         String cheminVersDCA ;
         String cheminVersDCC ;
 
-        //S'il a choisis l'option --d et --out
+        //S'il a choisi l'option --d et --out
         if(aMisExtensionTiretD&&aChoisisUnNomPourLeFichier)
         {
             cheminVersDCC=cheminDeLExtensionTiretD+"/"+nomDuFichier+"_DCC.puml";
             cheminVersDCA=cheminDeLExtensionTiretD+"/"+nomDuFichier+"_DCA.puml";
         }
-        //Sinon, s'il n'a que choisis l'option --d
+        //Sinon, s'il n'a que choisi l'option --d
         else if(aMisExtensionTiretD)
         {
             cheminVersDCC=cheminDeLExtensionTiretD+"/"+"DCCGenere.puml";
             cheminVersDCA=cheminDeLExtensionTiretD+"/"+"DCAGenere.puml";
         }
-        //Sinon, s'il n'a que choisis l'option --out
+        //Sinon, s'il n'a que choisi l'option --out
         else if(aChoisisUnNomPourLeFichier)
         {
             cheminVersDCC=nomDuFichier+"_DCC.puml";
@@ -160,20 +160,20 @@ public class PumlDiagram implements Doclet
         }
 
 
-        //S'il à mis l'option --d (je vais créer le repertoire)
+        //S'il a mis l'option --d (je vais créer le répertoire)
         if(aMisExtensionTiretD)
         {
             try
             {
                 Path dirPath = Paths.get(cheminDeLExtensionTiretD);
 
-                //Si le repertoire n'existe pas
+                //Si le répertoire n'existe pas
                 if (!Files.exists(dirPath))
                 {
-                    //Je créer le repertoire
+                    //Je créé le répertoire
                     Files.createDirectory(dirPath);
 
-                    //Je regarde si maintenant ce repertoire existe a affiche un message
+                    //Je regarde si maintenant ce répertoire existe et affiche un message
                     if(Files.exists(dirPath))
                         System.out.println("Le dossier a été créer : "+dirPath.getFileName());
                 }
@@ -248,7 +248,8 @@ public class PumlDiagram implements Doclet
                     System.out.println("Le fichier existe dèjà.");
                 }
             }
-            catch (IOException e) {
+            catch (IOException e)
+            {
                 System.out.println("Erreur de création.");
                 e.printStackTrace();
             }
@@ -301,7 +302,7 @@ public class PumlDiagram implements Doclet
         return retour;
     }
 
-    //Une autres méthode maisons qui s'assurent qu'il n'y a pas de < > [ ] à la fin d'une chaîne de caractères
+    //Une autre méthode maison qui s'assure qu'il n'y a pas de < > [ ] à la fin d'une chaîne de caractères
     public static String subStrLiens(String nom)
     {
         String retour;
@@ -350,9 +351,9 @@ public class PumlDiagram implements Doclet
         return retour;
     }
 
-    //La méthode pour les type de paramêtres et de retour qui va faire :
+    //La méthode pour les types de paramêtres et de retour qui va faire :
     // - si on a une ou 0 liste (on va enlever le nom des packages avant et rajouter [*])
-    // - sinon (si on a plus de 1 liste), on va tous garder (car on ne sait pas comment écrire en UML quand on a plusieurs listes)
+    // - sinon (si on a plus de 1 liste), on va tout garder (car on ne sait pas comment écrire en UML quand on a plusieurs listes)
     public static String subStrParametres(String nom)
     {
         String retour="";
@@ -365,7 +366,7 @@ public class PumlDiagram implements Doclet
                 nbFleche++;
         }
 
-        //Si on a plus de moins que 2 listes
+        //Si on a moins que 2 listes
         if(nbFleche<2)
         {
             int position = 0;
@@ -385,14 +386,14 @@ public class PumlDiagram implements Doclet
             if(retour.substring(retour.length()-1).equals(">"))
                 retour=retour.substring(0,retour.length()-1);
         }
-        //Sinon, on garde tous et on enlève juste le nom de certains package
+        //Sinon, on garde tous et on enlève juste le nom de certains packages
         else
         {
             //On va enlever les java.util avant
             retour=nom;
-            //Technique pour enlever le nom de certains package
+            //Technique pour enlever le nom de certains packages
             //(Pour que ce soit juste plus lisible)
-            //C'est très subljectif (car je choisis les packages qu'on a le plus)
+            //C'est très subjectif (car je choisis les packages qu'on a le plus)
             retour=retour.replace("java.","");
             retour=retour.replace("util.","");
             retour=retour.replace("Map.","");
@@ -405,7 +406,7 @@ public class PumlDiagram implements Doclet
 
     //------Pour les options-----
     //On a rajouté 3 options en plus pour la commande :
-    // --d : le repetoire où il veut mettre les diagrammes
+    // --d : le répetoire où il veut mettre les diagrammes
     // --out : le nom des diagrammes
     // --dca : s'il veut le DCA avec
 

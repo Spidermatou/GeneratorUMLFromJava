@@ -42,15 +42,6 @@ public class Associations
                          //Et que ce n'est pas la classe String
                          if (!PumlDiagram.subStr(el.asType().toString()).equals("String"))
                          {
-                             /*
-                             //+multiplicité
-                             //if(el.asType().getKind()==TypeKind.ARRAY)
-                             String cardi="";
-                             if(!el.asType().getKind().isPrimitive())
-                             {
-                                 cardi="\"*\"";
-                             }*/
-
                              String multi="";
                              //Je regarde si c'est une liste ou pas et je mets la multiplicité en fonction (* ou 0..1)
                              if(el.asType().toString().charAt(el.asType().toString().length()-1)=='>')

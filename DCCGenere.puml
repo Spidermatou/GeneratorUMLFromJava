@@ -27,7 +27,7 @@ CLASS Personnage
 + boire()
 + getNom():String
 + getBoisson():Boisson
-+ {static} getPseudos(personnages:Nommable[*]):String
++ {static} getPseudos(personnages:Nommable):String
 + {static} getBoissonParDefaut():Boisson
 
 }
@@ -127,7 +127,7 @@ CLASS Cowboy
 +  <<create>> Cowboy (nom:String,boisson:Boisson)
 + getPseudo():String{redefine::Personnage.getPseudo}
 + liberer(dame:Dame)
-+ liberer(captives:Dame[*])
++ liberer(captives:Dame)
 + capturer(horsLaLoi:HorsLaLoi)
 + tirerSur(brigand:HorsLaLoi)
 + sePresenter(){redefine::Personnage.sePresenter}

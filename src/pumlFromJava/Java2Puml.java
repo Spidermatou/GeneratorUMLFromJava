@@ -15,7 +15,7 @@ public class Java2Puml
         */
 
         /*
-        Commande corrigé:
+        Commande corrigée:
         javadoc -private -d test -sourcepath src -doclet pumlFromJava.FirstDoclet -docletpath out/production/ProjetP21 pumlFromJava
         */
 

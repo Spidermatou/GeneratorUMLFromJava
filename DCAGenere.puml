@@ -82,32 +82,32 @@ Personnage <|--- Cowboy
 
 Personnage <|--- Dame
 
-Boisson "0..1" ---> "0..1" Substantif : substantif >
+Boisson "0..1" ---> "0..1" Substantif : - {ReadOnly} substantif >
 
-Boisson "0..1" ---> "0..1" Boisson : EAU >
+Boisson "0..1" ---> "0..1" Boisson : + {static} {ReadOnly} EAU >
 
-Personnage "0..1" ---> "0..1" Boisson : BOISSON_PAR_DEFAUT >
+Personnage "0..1" ---> "0..1" Boisson : - {static} BOISSON_PAR_DEFAUT >
 
-Personnage "0..1" ---> "0..1" Boisson : boisson >
+Personnage "0..1" ---> "0..1" Boisson : - boisson >
 
-Substantif "0..1" ---> "0..1" Genre : genre >
+Substantif "0..1" ---> "0..1" Genre : - genre >
 
-Ripou "0..1" ---> "0..1" Brigand : brigand >
+Ripou "0..1" ---> "0..1" Brigand : - brigand >
 
-Brigand "*" ---> "0..1" Dame : captives >
+Brigand "*" ---> "0..1" Dame : - captives >
 
-Brigand "0..1" ---> "0..1" Cowboy : gardien >
+Brigand "0..1" ---> "0..1" Cowboy : - gardien >
 
-Brigand "0..1" ---> "0..1" Boisson : boissonParDefaut >
+Brigand "0..1" ---> "0..1" Boisson : - {static} boissonParDefaut >
 
-Cowboy "*" ---> "0..1" HorsLaLoi : captures >
+Cowboy "*" ---> "0..1" HorsLaLoi : - captures >
 
-Cowboy "0..1" ---> "0..1" Boisson : boissonParDefaut >
+Cowboy "0..1" ---> "0..1" Boisson : - {static} boissonParDefaut >
 
-Dame "0..1" ---> "0..1" Cowboy : sauveur >
+Dame "0..1" ---> "0..1" Cowboy : - sauveur >
 
-Dame "0..1" ---> "0..1" HorsLaLoi : ravisseur >
+Dame "0..1" ---> "0..1" HorsLaLoi : - ravisseur >
 
-Dame "0..1" ---> "0..1" Boisson : boissonParDefaut >
+Dame "0..1" ---> "0..1" Boisson : - {static} boissonParDefaut >
 }
 @enduml

@@ -1,6 +1,8 @@
 package pumlFromJava.liens;
 
 import pumlFromJava.PumlDiagram;
+import pumlFromJava.classes.Constructeurs;
+import pumlFromJava.classes.Modificateurs;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -50,9 +52,9 @@ public class Associations
                                  multi=" \"0..1\"";
 
                              //Et enfin que cette association n'est pas déjà présente dans la liste
-                             if (!associations.contains(e.getSimpleName() +multi+" ---> \"0..1\" " + PumlDiagram.subStrLiens(el.asType().toString()) + " : " + PumlDiagram.subStr(el.getSimpleName().toString())+" >"))
+                             if (!associations.contains(e.getSimpleName() +multi+" ---> \"0..1\" " + PumlDiagram.subStrLiens(el.asType().toString()) + " : " + new Modificateurs(el).obtenirLesModificateurs() + PumlDiagram.subStr(el.getSimpleName().toString())+" >"))
                              {
-                                 associations.add(e.getSimpleName() +multi+" ---> \"0..1\" " + PumlDiagram.subStrLiens(el.asType().toString()) + " : " + PumlDiagram.subStr(el.getSimpleName().toString())+" >");
+                                 associations.add(e.getSimpleName() +multi+" ---> \"0..1\" " + PumlDiagram.subStrLiens(el.asType().toString()) + " : " + new Modificateurs(el).obtenirLesModificateurs() +PumlDiagram.subStr(el.getSimpleName().toString())+" >");
                              }
                          }
                      }

@@ -12,3 +12,6 @@ On ne traite pas :
 - les types imbriquées
 - les types génériques
 - les modules
+
+Durée du projet : 1 mois
+Réalisé en 2023
